@@ -473,7 +473,7 @@ const IDCard = ({
       ctx.quadraticCurveTo(canvas.width / 2, 461, canvas.width, 489);
       ctx.stroke();
       
-      // Add tagline text with ACTivate colors - very bold and bright
+      // Add tagline text - Connected (Connect in cyan, ed in white)
       ctx.font = 'bold 34px "Segoe UI"';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -485,22 +485,20 @@ const IDCard = ({
       
       const footerY = 489 + (canvas.height - 489) / 2 - 6; // Scaled footer position
       
-      // Measure text parts for positioning (no quotes)
-      const actText = 'ACT';
-      const ivateText = 'ivate';
+      const connectText = 'Connect';
+      const edText = 'ed';
       
-      const actWidth = ctx.measureText(actText).width;
-      const ivateWidth = ctx.measureText(ivateText).width;
+      const connectWidth = ctx.measureText(connectText).width;
+      const edWidth = ctx.measureText(edText).width;
       
-      const totalWidth = actWidth + ivateWidth;
+      const totalWidth = connectWidth + edWidth;
       const startX = (canvas.width - totalWidth) / 2;
       
       ctx.fillStyle = '#00c8ff';
-      ctx.fillText(actText, startX + actWidth/2, footerY);
+      ctx.fillText(connectText, startX + connectWidth/2, footerY);
       
-      // Draw "ivate" in bright white
       ctx.fillStyle = '#ffffff';
-      ctx.fillText(ivateText, startX + actWidth + ivateWidth/2, footerY);
+      ctx.fillText(edText, startX + connectWidth + edWidth/2, footerY);
       
       // Reset shadow
       ctx.shadowColor = 'transparent';

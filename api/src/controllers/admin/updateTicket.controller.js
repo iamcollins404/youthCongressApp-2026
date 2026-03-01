@@ -1,4 +1,6 @@
 const Registration = require('../../models/tickets.model');
+const sendApprovalEmail = require('../tickets/sendApprovalEmail.controller');
+const sendDeclinedEmail = require('../tickets/sendDeclinedEmail.controller');
 
 const updateTicket = async (req, res) => {
     try {
@@ -61,6 +63,24 @@ const updateTicket = async (req, res) => {
             },
             { new: true, runValidators: true }
         );
+
+        // Send approval email when status changes to approved (don't fail the request if email fails)
+        if (status === 'approved') {
+            try {
+                await sendApprovalEmail(updatedRegistration);
+            } catch (emailError) {
+                console.error('Failed to send approval email:', emailError);
+            }
+        }
+
+        // Send declined email when status changes to declined (don't fail the request if email fails)
+        if (status === 'declined') {
+            try {
+                await sendDeclinedEmail(updatedRegistration, comment);
+            } catch (emailError) {
+                console.error('Failed to send declined email:', emailError);
+            }
+        }
         
         // Return success response
         res.status(200).json({

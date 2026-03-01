@@ -86,7 +86,7 @@ function Ticket() {
   }, [ticketData, qrCanvasRef])
 
   const handleDownload = () => {
-    if (!ticketData.ticketId || !qrCanvasRef.current) return
+    if (!ticketData.ticketId || !qrCanvasRef.current || ticketData.status !== 'Approved') return
     setDownloadingPdf(true)
     const qrCodeImg = qrCanvasRef.current.toDataURL('image/png')
     const tempDiv = document.createElement('div')
@@ -142,7 +142,7 @@ function Ticket() {
     s === 'Pending' ? '#eab308' : s === 'Approved' ? '#10b981' : s === 'Declined' ? '#ef4444' : '#6b7280'
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0c0f2e', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', background: '#0c0f2e', position: 'relative', display: 'flex', flexDirection: 'column' }}>
       {/* BG */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
         <img src={CAPE_TOWN_BG} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.08 }} />
@@ -163,15 +163,17 @@ function Ticket() {
       </nav>
 
       {/* Content */}
-      <div style={{ position: 'relative', zIndex: 10, padding: 'clamp(20px, 4vw, 32px) clamp(12px, 3vw, 16px) clamp(40px, 6vw, 64px)', maxWidth: 720, margin: '0 auto' }}>
+      <div style={{ position: 'relative', zIndex: 10, flex: 1, padding: 'clamp(20px, 4vw, 32px) clamp(12px, 3vw, 16px) clamp(40px, 6vw, 64px)', maxWidth: 720, margin: '0 auto', width: '100%' }}>
 
         {/* Top bar */}
         <div className="animate-fade-in-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, animationDelay: '0.1s', flexWrap: 'wrap', gap: 12 }}>
           <h1 style={{ color: 'white', fontSize: 'clamp(22px, 5vw, 28px)', fontWeight: 700 }}>Your Ticket</h1>
-          <button onClick={handleDownload} disabled={loading || error || downloadingPdf}
-            className="btn-primary" style={{ padding: 'clamp(8px, 1.5vw, 10px) clamp(16px, 3vw, 24px)', fontSize: 'clamp(13px, 2vw, 14px)', opacity: (loading || error || downloadingPdf) ? 0.5 : 1, cursor: (loading || error || downloadingPdf) ? 'not-allowed' : 'pointer' }}>
-            {downloadingPdf ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Downloading...</> : <><Download size={14} style={{ display: 'inline', marginRight: 6 }} /> Download PDF</>}
-          </button>
+          {!loading && !error && ticketData.status === 'Approved' && (
+            <button onClick={handleDownload} disabled={downloadingPdf}
+              className="btn-primary" style={{ padding: 'clamp(8px, 1.5vw, 10px) clamp(16px, 3vw, 24px)', fontSize: 'clamp(13px, 2vw, 14px)', opacity: downloadingPdf ? 0.5 : 1, cursor: downloadingPdf ? 'not-allowed' : 'pointer' }}>
+              {downloadingPdf ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Downloading...</> : <><Download size={14} style={{ display: 'inline', marginRight: 6 }} /> Download PDF</>}
+            </button>
+          )}
         </div>
 
         {/* Loading */}
