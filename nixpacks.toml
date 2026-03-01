@@ -1,0 +1,11 @@
+# Nixpacks config for Youth Congress monorepo
+# Tells Nixpacks this is a Node.js app when root has api/ + client/
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+cmds = ["npm install"]
+
+# API-only deploy from root (client typically deploys separately, e.g. Vercel)
+[start]
+cmd = "npm run start -w api"
