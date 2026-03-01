@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import QRCode from 'qrcode'
-import html2pdf from 'html2pdf.js'
+import html2canvas from 'html2canvas'
 import axios from 'axios'
 import { ArrowLeft, Download, Loader, Frown } from 'lucide-react'
 import { API_URL } from '../utils/api'
@@ -15,10 +15,11 @@ function Ticket() {
   const { ticketId } = useParams()
   const ticketRef = useRef(null)
   const qrCanvasRef = useRef(null)
-  const idCardPdfRef = useRef(null)
+  const idCardRef = useRef(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [downloadingPdf, setDownloadingPdf] = useState(false)
+  const [idCardPhotoDataUrl, setIdCardPhotoDataUrl] = useState(null)
 
   const [ticketData, setTicketData] = useState({
     ticketId: '', status: '', firstName: '', surname: '',
@@ -63,7 +64,7 @@ function Ticket() {
           email: ticket.email, contactNumber: ticket.contactNumber,
           conference: conferenceName, package: packageName,
           hoodieSize: ticket.hoodieSize,
-          passportPhoto: ticket.passportPhoto,
+          passportPhoto: ticket.passportPhoto || '',
           registrationDate: new Date(ticket.createdAt).toLocaleDateString(),
           eventName: 'Senior Youth Congress 2026',
           eventDate: '12 – 16 JUNE 2026',
@@ -88,22 +89,43 @@ function Ticket() {
     }
   }, [ticketData, qrCanvasRef])
 
+  // Load photo for ID card when ticket is approved
+  useEffect(() => {
+    if (!ticketData.passportPhoto || ticketData.status !== 'Approved') {
+      setIdCardPhotoDataUrl(null)
+      return
+    }
+    const base = API_URL.replace(/\/api\/?$/, '')
+    const photoUrl = ticketData.passportPhoto.startsWith('http') ? ticketData.passportPhoto : `${base}${ticketData.passportPhoto}`
+    fetch(photoUrl, { mode: 'cors' })
+      .then(res => res.ok ? res.blob() : null)
+      .then(blob => {
+        if (!blob) return
+        const reader = new FileReader()
+        reader.onloadend = () => setIdCardPhotoDataUrl(reader.result)
+        reader.readAsDataURL(blob)
+      })
+      .catch(() => setIdCardPhotoDataUrl(null))
+  }, [ticketData.passportPhoto, ticketData.status])
+
   const handleDownload = async () => {
-    if (!ticketData.ticketId || !idCardPdfRef.current || ticketData.status !== 'Approved') return
+    if (!ticketData.ticketId || ticketData.status !== 'Approved' || !idCardRef.current) return
     setDownloadingPdf(true)
     try {
-      // Wait for ID card canvas to finish rendering (images load async)
+      // Wait for ID card canvas to finish rendering (QR + images load async)
       await new Promise(r => setTimeout(r, 800))
-      const element = idCardPdfRef.current
-      await html2pdf().from(element).set({
-        margin: 0,
-        filename: `SYC2026_IDCard_${ticketData.ticketId}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).save()
+      const canvas = await html2canvas(idCardRef.current, {
+        backgroundColor: null,
+        useCORS: true,
+        scale: 2,
+      })
+      const imgData = canvas.toDataURL('image/png')
+      const link = document.createElement('a')
+      link.href = imgData
+      link.download = `SYC2026_IDCard_${ticketData.ticketId}.png`
+      link.click()
     } catch (err) {
-      console.error('PDF download error:', err)
+      console.error('ID card download error:', err)
     } finally {
       setDownloadingPdf(false)
     }
@@ -142,7 +164,7 @@ function Ticket() {
           {!loading && !error && ticketData.status === 'Approved' && (
             <button onClick={handleDownload} disabled={downloadingPdf}
               className="btn-primary" style={{ padding: 'clamp(8px, 1.5vw, 10px) clamp(16px, 3vw, 24px)', fontSize: 'clamp(13px, 2vw, 14px)', opacity: downloadingPdf ? 0.5 : 1, cursor: downloadingPdf ? 'not-allowed' : 'pointer' }}>
-              {downloadingPdf ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Downloading...</> : <><Download size={14} style={{ display: 'inline', marginRight: 6 }} /> Download PDF</>}
+              {downloadingPdf ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Downloading...</> : <><Download size={14} style={{ display: 'inline', marginRight: 6 }} /> Download ID Card</>}
             </button>
           )}
         </div>
@@ -164,6 +186,35 @@ function Ticket() {
             <Link to="/" className="btn-primary" style={{ padding: '12px 32px', fontSize: 15, textDecoration: 'none' }}>
               Return Home
             </Link>
+          </div>
+        )}
+
+        {/* Hidden ID card for download - rendered off-screen */}
+        {!loading && !error && ticketData.status === 'Approved' && (
+          <div
+            ref={idCardRef}
+            style={{
+              position: 'absolute',
+              left: '-9999px',
+              top: 0,
+              width: 738,
+              height: 559,
+              pointerEvents: 'none',
+            }}
+          >
+            <IDCard
+              name={`${ticketData.firstName} ${ticketData.surname}`}
+              id={ticketData.ticketId}
+              conference={ticketData.conference}
+              photoUrl={
+                idCardPhotoDataUrl ||
+                (ticketData.passportPhoto?.startsWith('http')
+                  ? ticketData.passportPhoto
+                  : ticketData.passportPhoto
+                    ? `${API_URL.replace(/\/api\/?$/, '')}${ticketData.passportPhoto}`
+                    : '')
+              }
+            />
           </div>
         )}
 
@@ -226,48 +277,12 @@ function Ticket() {
           </div>
         )}
 
-        {/* Hidden ID card for PDF download - centered on white A4 */}
-        {!loading && !error && ticketData.ticketId && (
-          <div
-            ref={idCardPdfRef}
-            style={{
-              position: 'absolute',
-              left: -9999,
-              top: 0,
-              width: 794,
-              minHeight: 1123,
-              padding: 40,
-              background: '#ffffff',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              boxSizing: 'border-box',
-            }}
-          >
-            <IDCard
-              name={`${ticketData.firstName} ${ticketData.surname}`}
-              id={ticketData.ticketId}
-              conference={ticketData.conference}
-              phone={ticketData.contactNumber}
-              photoUrl={
-                ticketData.passportPhoto
-                  ? ticketData.passportPhoto.startsWith('http')
-                    ? ticketData.passportPhoto
-                    : ticketData.passportPhoto.startsWith('/')
-                    ? `${API_URL.replace('/api', '')}${ticketData.passportPhoto}`
-                    : ticketData.passportPhoto
-                  : ''
-              }
-            />
-          </div>
-        )}
-
         {/* Info box */}
         {!loading && !error && (
           <div className="glass animate-fade-in-up" style={{ padding: 'clamp(16px, 3vw, 28px)', marginTop: 24, animationDelay: '0.4s' }}>
             <h3 style={{ color: 'white', fontSize: 'clamp(16px, 3vw, 18px)', fontWeight: 700, marginBottom: 12 }}>Important Information</h3>
             <ul style={{ color: 'rgba(255,255,255,0.5)', lineHeight: 1.9, paddingLeft: 20, margin: 0, fontSize: 'clamp(13px, 2.2vw, 15px)' }}>
-              <li>Download and save your ticket as PDF for easier access during the event.</li>
+              <li>Download and save your ID card for easier access during the event.</li>
               <li>Your status is <span style={{ color: statusColor(ticketData.status), fontWeight: 600 }}>{ticketData.status}</span>
                 {ticketData.status === 'Pending' && ' — it will update once payment is verified.'}
               </li>
@@ -290,6 +305,17 @@ function InfoField({ label, value, mono, color }) {
       <p style={{ color: color || 'white', fontSize: 15, fontWeight: 500, fontFamily: mono ? 'monospace' : 'inherit', margin: 0 }}>{value}</p>
     </div>
   )
+}
+
+function statusBgStyle(status) {
+  if (status === 'Pending') return 'background-color: #eab308; color: black;'
+  if (status === 'Approved') return 'background-color: #10b981; color: white;'
+  if (status === 'Declined') return 'background-color: #ef4444; color: white;'
+  return 'background-color: #6b7280; color: white;'
+}
+
+function infoRow(label, value) {
+  return `<div style="margin-bottom: 10px;"><div style="color: rgba(255,255,255,0.4); font-size: 12px; margin-bottom: 2px;">${label}</div><div style="font-size: 14px; color: white;">${value}</div></div>`
 }
 
 export default Ticket

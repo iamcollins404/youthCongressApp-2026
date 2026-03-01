@@ -1470,9 +1470,12 @@ function AdminTickets() {
     if (ticket.passportPhoto) {
       setIsIDCardPhotoLoading(true);
       try {
+        const base = API_URL.replace(/\/api\/?$/, "");
+        const photoUrl = ticket.passportPhoto.startsWith("http")
+          ? ticket.passportPhoto
+          : `${base}${ticket.passportPhoto}`;
         const corsProxyUrl = "https://corsproxy.io/?";
-        const fetchUrl =
-          corsProxyUrl + encodeURIComponent(ticket.passportPhoto);
+        const fetchUrl = corsProxyUrl + encodeURIComponent(photoUrl);
         const response = await fetch(fetchUrl);
         const blob = await response.blob();
         const reader = new window.FileReader();
@@ -1496,6 +1499,8 @@ function AdminTickets() {
     if (!idCardRef.current || !selectedIDCardTicket) return;
     setIsIDCardDownloading(true);
     try {
+      // Wait for ID card canvas to finish rendering (QR + images load async)
+      await new Promise((r) => setTimeout(r, 600));
       const element = idCardRef.current;
       const canvas = await html2canvas(element, {
         backgroundColor: null,
@@ -2717,74 +2722,73 @@ function AdminTickets() {
           role="dialog"
           aria-modal="true"
         >
-          <div className="flex items-center justify-center min-h-screen p-4 text-center">
+          <div className="flex items-center justify-center min-h-screen p-6">
             <div
               className="fixed inset-0 bg-gray-800/60 transition-opacity"
               aria-hidden="true"
-              // Removed onClick to prevent closing modal by clicking background
             ></div>
             <div
-              className="inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all align-middle relative"
-              style={{ width: "auto", maxWidth: "90vw" }}
+              className="relative flex flex-col items-center justify-center rounded-xl overflow-hidden shadow-2xl bg-white"
+              style={{ maxWidth: "min(420px, 90vw)" }}
             >
-              <div className="bg-white px-6 pt-5 pb-4">
-                <div className="flex flex-col items-center">
-                  <div className="flex justify-between items-center mb-4 border-b pb-4 w-full">
-                    <h3
-                      className="text-xl leading-6 font-medium text-gray-900"
-                      id="idcard-modal-title"
-                    >
-                      ID Card Preview: {selectedIDCardTicket.id}
-                    </h3>
-                    <button
-                      onClick={() => setShowIDCardPreviewModal(false)}
-                      className="text-gray-400 hover:text-gray-500"
-                    >
-                      <svg
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                  {/* IDCard component here - centered and not stretched */}
-                  <div
-                    className="flex justify-center items-center"
-                    style={{ width: "auto" }}
-                  >
-                    <div
-                      ref={idCardRef}
-                      style={{
-                        background: "none",
-                        maxWidth: "none",
-                        width: "auto",
-                      }}
-                    >
-                      <IDCard
-                        name={`${selectedIDCardTicket.firstName} ${selectedIDCardTicket.surname}`}
-                        id={selectedIDCardTicket.id}
-                        conference={selectedIDCardTicket.conference}
-                        photoUrl={
-                          selectedIDCardPhotoDataUrl ||
-                          selectedIDCardTicket.passportPhoto
-                        }
-                      />
-                    </div>
-                  </div>
+              <div className="absolute top-3 right-3 z-10">
+                <button
+                  onClick={() => setShowIDCardPreviewModal(false)}
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                  aria-label="Close"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="pt-4 pb-2 px-4 text-center">
+                <h3 className="text-sm font-medium text-gray-500">ID Card</h3>
+                <p className="text-xs text-gray-400 mt-0.5">{selectedIDCardTicket.id}</p>
+              </div>
+              <div className="relative flex justify-center items-center py-4 px-6 overflow-hidden">
+                {/* Visible scaled ID card */}
+                <div
+                  className="flex justify-center items-center"
+                  style={{ transform: "scale(0.5)", transformOrigin: "center center" }}
+                >
+                  <IDCard
+                    name={`${selectedIDCardTicket.firstName} ${selectedIDCardTicket.surname}`}
+                    id={selectedIDCardTicket.id}
+                    conference={selectedIDCardTicket.conference}
+                    photoUrl={
+                      selectedIDCardPhotoDataUrl ||
+                      selectedIDCardTicket.passportPhoto
+                    }
+                  />
+                </div>
+                {/* Hidden full-size ID card for download */}
+                <div
+                  ref={idCardRef}
+                  style={{
+                    position: "absolute",
+                    left: "-9999px",
+                    top: 0,
+                    width: 738,
+                    height: 559,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <IDCard
+                    name={`${selectedIDCardTicket.firstName} ${selectedIDCardTicket.surname}`}
+                    id={selectedIDCardTicket.id}
+                    conference={selectedIDCardTicket.conference}
+                    photoUrl={
+                      selectedIDCardPhotoDataUrl ||
+                      selectedIDCardTicket.passportPhoto
+                    }
+                  />
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 flex flex-row-reverse gap-3 justify-center">
                 <button
                   type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex justify-center rounded-lg px-4 py-2 bg-[#00c8ff] text-sm font-medium text-[#0c0f2e] hover:bg-[#00b4e6] focus:outline-none focus:ring-2 focus:ring-[#00c8ff]/50 disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handleDownloadIDCard}
                   disabled={isIDCardPhotoLoading || isIDCardDownloading}
                 >
@@ -2842,7 +2846,7 @@ function AdminTickets() {
                 </button>
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="inline-flex justify-center rounded-lg border border-gray-200 px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200"
                   onClick={() => setShowIDCardPreviewModal(false)}
                 >
                   Close
