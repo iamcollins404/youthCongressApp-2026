@@ -6,6 +6,7 @@ import axios from 'axios'
 import { ArrowLeft, Download, Loader, Frown } from 'lucide-react'
 import { API_URL } from '../utils/api'
 import Footer from '../components/landing/footer'
+import IDCard from '../components/idcard/IDCard'
 import ylogo from '../assets/images/ylogo.png'
 
 const CAPE_TOWN_BG = 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1920&q=80'
@@ -14,6 +15,7 @@ function Ticket() {
   const { ticketId } = useParams()
   const ticketRef = useRef(null)
   const qrCanvasRef = useRef(null)
+  const idCardPdfRef = useRef(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [downloadingPdf, setDownloadingPdf] = useState(false)
@@ -21,7 +23,7 @@ function Ticket() {
   const [ticketData, setTicketData] = useState({
     ticketId: '', status: '', firstName: '', surname: '',
     email: '', contactNumber: '', conference: '', package: '',
-    hoodieSize: '', registrationDate: '',
+    hoodieSize: '', passportPhoto: '', registrationDate: '',
     eventName: 'Senior Youth Congress 2026',
     eventDate: '12 – 16 JUNE 2026',
     eventLocation: 'WHITE CITY MPC, SALDANHA BAY, WEST COAST'
@@ -61,6 +63,7 @@ function Ticket() {
           email: ticket.email, contactNumber: ticket.contactNumber,
           conference: conferenceName, package: packageName,
           hoodieSize: ticket.hoodieSize,
+          passportPhoto: ticket.passportPhoto,
           registrationDate: new Date(ticket.createdAt).toLocaleDateString(),
           eventName: 'Senior Youth Congress 2026',
           eventDate: '12 – 16 JUNE 2026',
@@ -85,57 +88,25 @@ function Ticket() {
     }
   }, [ticketData, qrCanvasRef])
 
-  const handleDownload = () => {
-    if (!ticketData.ticketId || !qrCanvasRef.current || ticketData.status !== 'Approved') return
+  const handleDownload = async () => {
+    if (!ticketData.ticketId || !idCardPdfRef.current || ticketData.status !== 'Approved') return
     setDownloadingPdf(true)
-    const qrCodeImg = qrCanvasRef.current.toDataURL('image/png')
-    const tempDiv = document.createElement('div')
-    tempDiv.innerHTML = `
-      <div style="background-color: #0c0f2e; color: white; padding: 20px; font-family: Arial, sans-serif;">
-        <div style="max-width: 650px; margin: 0 auto; background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,200,255,0.1);">
-          <div style="background: linear-gradient(135deg, #111540, #0c0f2e); padding: 20px; border-bottom: 1px solid rgba(0,200,255,0.1);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <h1 style="font-size: 22px; font-weight: bold; margin: 0; color: white;">${ticketData.eventName}</h1>
-              <div style="${statusBgStyle(ticketData.status)} padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: bold;">${ticketData.status}</div>
-            </div>
-            <p style="font-size: 14px; opacity: 0.6; margin-top: 8px; color: white;">${ticketData.eventDate} &bull; ${ticketData.eventLocation}</p>
-          </div>
-          <div style="padding: 20px;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-              <div>
-                <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #00c8ff;">Attendee Information</h2>
-                ${infoRow('Full Name', `${ticketData.firstName} ${ticketData.surname}`)}
-                ${infoRow('Email', ticketData.email)}
-                ${infoRow('Contact', ticketData.contactNumber)}
-                ${infoRow('Conference', ticketData.conference)}
-              </div>
-              <div>
-                <h2 style="font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #00c8ff;">Ticket Details</h2>
-                ${infoRow('Ticket ID', ticketData.ticketId)}
-                ${infoRow('Package', ticketData.package)}
-                ${ticketData.hoodieSize ? infoRow('Hoodie Size', ticketData.hoodieSize) : ''}
-                ${infoRow('Registered', ticketData.registrationDate)}
-              </div>
-            </div>
-            <div style="border-top: 1px solid rgba(0,200,255,0.1); padding: 20px; text-align: center;">
-              <p style="opacity: 0.6; margin-bottom: 12px; color: white; font-size: 13px;">Scan this QR code at the registration desk</p>
-              <div style="background: white; padding: 8px; border-radius: 8px; display: inline-block; margin-bottom: 8px;">
-                <img src="${qrCodeImg}" alt="QR Code" width="150" height="150" />
-              </div>
-              <p style="font-family: monospace; color: #00c8ff; font-size: 14px;">${ticketData.ticketId}</p>
-            </div>
-          </div>
-          <div style="background: linear-gradient(135deg, #0c0f2e, #111540); padding: 12px; text-align: center; border-top: 1px solid rgba(0,200,255,0.1); font-size: 12px; opacity: 0.5; color: white;">
-            This ticket must be presented at the entrance. Please arrive 30 minutes before the event.
-          </div>
-        </div>
-      </div>`
-    html2pdf().from(tempDiv).set({
-      margin: 10, filename: `SYC2026_Ticket_${ticketData.ticketId}.pdf`,
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#0c0f2e' },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).save().then(() => setDownloadingPdf(false)).catch(() => setDownloadingPdf(false))
+    try {
+      // Wait for ID card canvas to finish rendering (images load async)
+      await new Promise(r => setTimeout(r, 800))
+      const element = idCardPdfRef.current
+      await html2pdf().from(element).set({
+        margin: 0,
+        filename: `SYC2026_IDCard_${ticketData.ticketId}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).save()
+    } catch (err) {
+      console.error('PDF download error:', err)
+    } finally {
+      setDownloadingPdf(false)
+    }
   }
 
   const statusColor = (s) =>
@@ -255,6 +226,42 @@ function Ticket() {
           </div>
         )}
 
+        {/* Hidden ID card for PDF download - centered on white A4 */}
+        {!loading && !error && ticketData.ticketId && (
+          <div
+            ref={idCardPdfRef}
+            style={{
+              position: 'absolute',
+              left: -9999,
+              top: 0,
+              width: 794,
+              minHeight: 1123,
+              padding: 40,
+              background: '#ffffff',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              boxSizing: 'border-box',
+            }}
+          >
+            <IDCard
+              name={`${ticketData.firstName} ${ticketData.surname}`}
+              id={ticketData.ticketId}
+              conference={ticketData.conference}
+              phone={ticketData.contactNumber}
+              photoUrl={
+                ticketData.passportPhoto
+                  ? ticketData.passportPhoto.startsWith('http')
+                    ? ticketData.passportPhoto
+                    : ticketData.passportPhoto.startsWith('/')
+                    ? `${API_URL.replace('/api', '')}${ticketData.passportPhoto}`
+                    : ticketData.passportPhoto
+                  : ''
+              }
+            />
+          </div>
+        )}
+
         {/* Info box */}
         {!loading && !error && (
           <div className="glass animate-fade-in-up" style={{ padding: 'clamp(16px, 3vw, 28px)', marginTop: 24, animationDelay: '0.4s' }}>
@@ -283,17 +290,6 @@ function InfoField({ label, value, mono, color }) {
       <p style={{ color: color || 'white', fontSize: 15, fontWeight: 500, fontFamily: mono ? 'monospace' : 'inherit', margin: 0 }}>{value}</p>
     </div>
   )
-}
-
-function statusBgStyle(status) {
-  if (status === 'Pending') return 'background-color: #eab308; color: black;'
-  if (status === 'Approved') return 'background-color: #10b981; color: white;'
-  if (status === 'Declined') return 'background-color: #ef4444; color: white;'
-  return 'background-color: #6b7280; color: white;'
-}
-
-function infoRow(label, value) {
-  return `<div style="margin-bottom: 10px;"><div style="color: rgba(255,255,255,0.4); font-size: 12px; margin-bottom: 2px;">${label}</div><div style="font-size: 14px; color: white;">${value}</div></div>`
 }
 
 export default Ticket
