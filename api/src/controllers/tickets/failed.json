@@ -1,0 +1,8 @@
+[
+  {
+    "recordIndex": 1,
+    "record": {},
+    "error": "Validation Error: Path `email` is required., Path `firstName` is required., Path `surname` is required., Path `conference` is required., Path `gender` is required., Path `hoodieSize` is required.",
+    "errorType": "ValidationError"
+  }
+]
