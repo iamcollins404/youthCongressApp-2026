@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "http://youthcongress-vnpjp8-bba89e-172-209-217-48.traefik.me/api/:path*" },
+    { "source": "/api/:path*", "destination": "http://youthcongress-0mj8wq-a0f0a9-172-209-217-48.traefik.me/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "builds": [{ "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } }],
