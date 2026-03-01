@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Menu, X, Calendar, MapPin, Users, Mic, Flame, Music,
-  Lightbulb, Handshake, ChevronDown, Hotel
+  Lightbulb, Handshake, ChevronDown, Hotel, Package, Check
 } from 'lucide-react'
 import useReveal from '../utils/useReveal'
 import Footer from '../components/landing/footer'
@@ -398,24 +398,46 @@ function Index() {
             { name: 'Half Pack', price: 'R900', desc: 'Jacket & Bag', items: ['Everything in Basic', 'Congress Jacket', 'Congress Bag'], highlight: false },
             { name: 'Full Pack', price: 'R1200', desc: 'Jacket, Bag, Cup & Socks', items: ['Everything in Basic', 'Congress Jacket', 'Congress Bag', 'Stately Cup', 'Congress Socks'], highlight: true },
           ].map((pkg, i) => (
-            <div key={i} className="glass" style={{
-              padding: 28, textAlign: 'center', position: 'relative',
-              border: pkg.highlight ? '1px solid rgba(0,200,255,0.3)' : undefined,
-            }}>
+            <div
+              key={i}
+              className={`pricing-card glass ${pkg.highlight ? 'pricing-card-highlight' : ''}`}
+              style={{
+                padding: 'clamp(24px, 3vw, 32px)',
+                textAlign: 'center',
+                position: 'relative',
+                borderRadius: 16,
+                border: pkg.highlight ? '1px solid rgba(0,200,255,0.4)' : '1px solid rgba(255,255,255,0.06)',
+                boxShadow: pkg.highlight ? '0 0 32px rgba(0,200,255,0.1)' : '0 4px 24px rgba(0,0,0,0.15)',
+                transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+              }}
+            >
               {pkg.highlight && (
                 <span style={{
                   position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
                   background: 'linear-gradient(135deg, #00c8ff, #0066ee)', color: 'white',
-                  fontSize: 11, fontWeight: 700, padding: '4px 16px', borderRadius: 20,
-                  textTransform: 'uppercase', letterSpacing: '0.05em',
+                  fontSize: 11, fontWeight: 700, padding: '6px 18px', borderRadius: 20,
+                  textTransform: 'uppercase', letterSpacing: '0.08em',
+                  boxShadow: '0 4px 16px rgba(0,200,255,0.3)',
                 }}>Best Value</span>
               )}
-              <h3 style={{ color: 'white', fontSize: 18, fontWeight: 700, marginBottom: 4, marginTop: pkg.highlight ? 8 : 0 }}>{pkg.name}</h3>
-              <div className="text-gradient-cyan" style={{ fontSize: 36, fontWeight: 900, marginBottom: 4 }}>{pkg.price}</div>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, marginBottom: 16 }}>{pkg.desc}</p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+                <Package size={28} color={pkg.highlight ? '#00c8ff' : 'rgba(255,255,255,0.5)'} strokeWidth={1.5} />
+              </div>
+              <h3 style={{ color: 'white', fontSize: 'clamp(18px, 2.5vw, 20px)', fontWeight: 700, marginBottom: 6, marginTop: pkg.highlight ? 4 : 0 }}>{pkg.name}</h3>
+              <div className="text-gradient-cyan" style={{ fontSize: 'clamp(32px, 4vw, 40px)', fontWeight: 900, marginBottom: 6, letterSpacing: '-0.02em' }}>{pkg.price}</div>
+              <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, marginBottom: 20, lineHeight: 1.4 }}>{pkg.desc}</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, textAlign: 'left' }}>
                 {pkg.items.map((item, j) => (
-                  <li key={j} style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, padding: '4px 0', borderTop: j ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                  <li key={j} style={{
+                    color: 'rgba(255,255,255,0.7)',
+                    fontSize: 14,
+                    padding: '10px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    borderTop: j ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                  }}>
+                    <Check size={16} color="#00c8ff" strokeWidth={2.5} style={{ flexShrink: 0 }} />
                     {item}
                   </li>
                 ))}

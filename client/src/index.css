@@ -272,13 +272,34 @@ body {
   margin: 0 auto;
 }
 
-/* Packages: 4 → 2 → 1 */
+/* Packages: 2 per row on md/lg, 1 on small */
 .packages-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: 1fr;
   gap: 20px;
-  max-width: 960px;
+  max-width: 720px;
   margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .packages-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 720px;
+  }
+}
+
+.pricing-card {
+  cursor: default;
+}
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2), 0 0 24px rgba(0, 200, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+.pricing-card-highlight:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2), 0 0 40px rgba(0, 200, 255, 0.15);
+  border-color: rgba(0, 200, 255, 0.5) !important;
 }
 
 /* Singing groups: 5 → 3 → 2 */
@@ -401,8 +422,8 @@ body {
   }
 
   .packages-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .expect-grid {
@@ -436,10 +457,6 @@ body {
 
 @media (max-width: 420px) {
   .speakers-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .packages-grid {
     grid-template-columns: 1fr;
   }
 
