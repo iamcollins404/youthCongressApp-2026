@@ -6,6 +6,7 @@ import IDCard from "../../components/idcard/IDCard";
 import Footer from "../../components/landing/footer";
 import AdminNavbar from "../../components/admin/AdminNavbar";
 import { API_URL } from "../../utils/api";
+import { safeParseDate, formatDate, formatDateTime } from "../../utils/date";
 
 const PKG_LABELS = {
   basic: 'Basic — No Pack (R450)',
@@ -118,33 +119,34 @@ function AdminTickets() {
         if (response.data) {
           // Map API response to our ticket format and sort by createdAt
           const formattedTickets = response.data
-            .map((ticket) => ({
-              id: ticket.ticketId,
-              firstName: ticket.firstName,
-              surname: ticket.surname,
-              email: ticket.email,
-              conference: displayConf(ticket.conference),
-              package: displayPkg(ticket.package),
-              rawPackage: ticket.package,
-              hoodieSize: ticket.hoodieSize,
-              registrationDate: new Date(ticket.createdAt)
-                .toISOString()
-                .split("T")[0],
-              status:
-                ticket.status === "declined"
-                  ? "Declined"
-                  : ticket.status.charAt(0).toUpperCase() +
-                    ticket.status.slice(1),
-              age: ticket.age,
-              gender: ticket.gender,
-              contactNumber: ticket.contactNumber,
-              churchInsured: ticket.churchInsured,
-              passportPhoto: ticket.passportPhoto,
-              paymentProof: ticket.paymentProof,
-              _id: ticket._id,
-              statusComments: ticket.statusComments || [],
-              createdAt: new Date(ticket.createdAt).getTime(), // Store timestamp for sorting
-            }))
+            .map((ticket) => {
+              const createdAt = safeParseDate(ticket.createdAt);
+              return {
+                id: ticket.ticketId,
+                firstName: ticket.firstName,
+                surname: ticket.surname,
+                email: ticket.email,
+                conference: displayConf(ticket.conference),
+                package: displayPkg(ticket.package),
+                rawPackage: ticket.package,
+                hoodieSize: ticket.hoodieSize,
+                registrationDate: createdAt ? createdAt.toISOString().split("T")[0] : "",
+                status:
+                  ticket.status === "declined"
+                    ? "Declined"
+                    : ticket.status.charAt(0).toUpperCase() +
+                      ticket.status.slice(1),
+                age: ticket.age,
+                gender: ticket.gender,
+                contactNumber: ticket.contactNumber,
+                churchInsured: ticket.churchInsured,
+                passportPhoto: ticket.passportPhoto,
+                paymentProof: ticket.paymentProof,
+                _id: ticket._id,
+                statusComments: ticket.statusComments || [],
+                createdAt: createdAt ? createdAt.getTime() : 0,
+              };
+            })
             .sort((a, b) => b.createdAt - a.createdAt); // Sort by createdAt in descending order (newest first)
           setTickets(formattedTickets);
         }
@@ -202,9 +204,7 @@ function AdminTickets() {
         "Contact Number": ticket.contactNumber,
         Conference: ticket.conference,
         Package: ticket.package,
-        "Registration Date": new Date(ticket.registrationDate).toLocaleString(
-          "en-ZA"
-        ),
+        "Registration Date": formatDateTime(ticket.registrationDate, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }),
         Status: ticket.status,
         Age: ticket.age,
         Gender: ticket.gender,

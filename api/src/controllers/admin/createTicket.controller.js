@@ -60,10 +60,8 @@ const createTicket = async (req, res) => {
     // Generate unique ticket ID
     const ticketId = await generateUniqueTicketId();
 
-    // Get current time in Harare timezone
-    const getCurrentHarareTime = () => {
-      return new Date().toLocaleString("en-US", { timeZone: "Africa/Harare" });
-    };
+    // Current timestamp (stored as UTC; display with Africa/Harare when showing to users)
+    const now = new Date();
 
     // Create new registration
     const registrationData = {
@@ -81,12 +79,12 @@ const createTicket = async (req, res) => {
       paymentProof: req.body.paymentProof,
       ticketId: ticketId,
       status: req.body.status || "pending",
-      createdAt: getCurrentHarareTime(),
+      createdAt: now,
       statusComments: [
         {
           status: req.body.status || "pending",
           comment: req.body.statusComment || "Ticket created by admin.",
-          createdAt: getCurrentHarareTime(),
+          createdAt: now,
         },
       ],
     };

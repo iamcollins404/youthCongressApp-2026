@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas'
 import axios from 'axios'
 import { ArrowLeft, Download, Loader, Frown } from 'lucide-react'
 import { API_URL } from '../utils/api'
+import { safeParseDate, formatDate } from '../utils/date'
 import Footer from '../components/landing/footer'
 import IDCard from '../components/idcard/IDCard'
 import ylogo from '../assets/images/ylogo.png'
@@ -65,7 +66,7 @@ function Ticket() {
           conference: conferenceName, package: packageName,
           hoodieSize: ticket.hoodieSize,
           passportPhoto: ticket.passportPhoto || '',
-          registrationDate: new Date(ticket.createdAt).toLocaleDateString(),
+          registrationDate: formatDate(ticket.createdAt),
           eventName: 'Senior Youth Congress 2026',
           eventDate: '12 – 16 JUNE 2026',
           eventLocation: 'WHITE CITY MPC, SALDANHA BAY, WEST COAST'

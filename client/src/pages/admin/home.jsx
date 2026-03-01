@@ -4,6 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import { Bar, Doughnut } from 'react-chartjs-2'
 import axios from 'axios'
 import { API_URL } from '../../utils/api'
+import { safeParseDate } from '../../utils/date'
 import Footer from '../../components/landing/footer'
 import AdminNavbar from '../../components/admin/AdminNavbar'
 
@@ -213,7 +214,8 @@ function AdminHome() {
     const dailyCounts = {}
     last7Days.forEach(d => { dailyCounts[toDateKey(d)] = 0 })
     tickets.forEach(t => {
-      const d = new Date(t.createdAt)
+      const d = safeParseDate(t.createdAt)
+      if (!d) return
       const key = toDateKey(d)
       if (key in dailyCounts) dailyCounts[key]++
     })
@@ -235,7 +237,9 @@ function AdminHome() {
     const weeklyCounts = {}
     weekKeys.forEach(k => { weeklyCounts[k] = 0 })
     tickets.forEach(t => {
-      const k = toWeekKey(new Date(t.createdAt))
+      const d = safeParseDate(t.createdAt)
+      if (!d) return
+      const k = toWeekKey(d)
       if (k in weeklyCounts) weeklyCounts[k]++
     })
     const weeklyData = {
@@ -259,7 +263,9 @@ function AdminHome() {
     const monthlyCounts = {}
     monthKeys.forEach(k => { monthlyCounts[k] = 0 })
     tickets.forEach(t => {
-      const k = toMonthKey(new Date(t.createdAt))
+      const d = safeParseDate(t.createdAt)
+      if (!d) return
+      const k = toMonthKey(d)
       if (k in monthlyCounts) monthlyCounts[k]++
     })
     const monthlyData = {

@@ -1,3 +1,6 @@
+// Enforce Africa/Harare timezone for all date operations
+process.env.TZ = 'Africa/Harare';
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');

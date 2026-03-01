@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { API_URL } from '../../utils/api'
+import { safeParseDate, formatDate, formatDateTime } from '../../utils/date'
 import Footer from '../../components/landing/footer'
 import AdminNavbar from '../../components/admin/AdminNavbar'
 
@@ -51,28 +52,31 @@ function AdminDuplicates() {
           const duplicates = findDuplicateRecords(response.data)
           // Map API response to our ticket format and sort by attendee name
           const formattedDuplicates = duplicates
-            .map(ticket => ({
-              id: ticket.ticketId,
-              firstName: ticket.firstName,
-              surname: ticket.surname,
-              email: ticket.email,
-              conference: CONF_LABELS[ticket.conference] || ticket.conference,
-              package: PKG_LABELS[ticket.package] || ticket.package,
-              rawPackage: ticket.package,
-              hoodieSize: ticket.hoodieSize,
-              registrationDate: new Date(ticket.createdAt).toISOString().split('T')[0],
-              status: ticket.status === 'declined' ? 'Declined' : ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1),
-              age: ticket.age,
-              gender: ticket.gender,
-              contactNumber: ticket.contactNumber,
-              churchInsured: ticket.churchInsured,
-              passportPhoto: ticket.passportPhoto,
-              paymentProof: ticket.paymentProof,
-              _id: ticket._id,
-              statusComments: ticket.statusComments || [],
-              createdAt: new Date(ticket.createdAt).getTime(), // Store timestamp for secondary sorting
-              sortKey: `${ticket.firstName.toLowerCase()} ${ticket.surname.toLowerCase()} ${ticket.email.toLowerCase()}` // Add sort key for grouping
-            }))
+            .map(ticket => {
+              const createdAt = safeParseDate(ticket.createdAt)
+              return {
+                id: ticket.ticketId,
+                firstName: ticket.firstName,
+                surname: ticket.surname,
+                email: ticket.email,
+                conference: CONF_LABELS[ticket.conference] || ticket.conference,
+                package: PKG_LABELS[ticket.package] || ticket.package,
+                rawPackage: ticket.package,
+                hoodieSize: ticket.hoodieSize,
+                registrationDate: createdAt ? createdAt.toISOString().split('T')[0] : '',
+                status: ticket.status === 'declined' ? 'Declined' : ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1),
+                age: ticket.age,
+                gender: ticket.gender,
+                contactNumber: ticket.contactNumber,
+                churchInsured: ticket.churchInsured,
+                passportPhoto: ticket.passportPhoto,
+                paymentProof: ticket.paymentProof,
+                _id: ticket._id,
+                statusComments: ticket.statusComments || [],
+                createdAt: createdAt ? createdAt.getTime() : 0,
+                sortKey: `${ticket.firstName.toLowerCase()} ${ticket.surname.toLowerCase()} ${ticket.email.toLowerCase()}`
+              }
+            })
             .sort((a, b) => {
               // First sort by the composite key to group duplicates
               const keyCompare = a.sortKey.localeCompare(b.sortKey)
@@ -299,7 +303,7 @@ function AdminDuplicates() {
                         <div><p className="text-[10px] uppercase tracking-wider text-white/30 mb-0.5">Package</p><p className="text-xs text-white/70">{ticket.package}</p></div>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
-                        <div><p className="text-[10px] uppercase tracking-wider text-white/30 mb-0.5">Registered</p><p className="text-xs text-white/70">{new Date(ticket.registrationDate).toLocaleDateString()}</p></div>
+                        <div><p className="text-[10px] uppercase tracking-wider text-white/30 mb-0.5">Registered</p><p className="text-xs text-white/70">{formatDate(ticket.registrationDate)}</p></div>
                         <div>
                           <p className="text-[10px] uppercase tracking-wider text-white/30 mb-0.5">Status</p>
                           <select
@@ -351,7 +355,7 @@ function AdminDuplicates() {
                           <span className="text-xs text-white/50">{ticket.package}</span>
                         </td>
                         <td className="px-3 py-3.5 whitespace-nowrap hidden xl:table-cell">
-                          <span className="text-xs text-white/50">{new Date(ticket.registrationDate).toLocaleString('en-ZA', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                          <span className="text-xs text-white/50">{formatDateTime(ticket.registrationDate, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                         </td>
                         <td className="px-3 py-3.5 whitespace-nowrap">{renderStatusBadge(ticket.status)}</td>
                         <td className="px-3 py-3.5 pr-5 whitespace-nowrap text-right">
@@ -435,7 +439,7 @@ function AdminDuplicates() {
                             )}
                             <div>
                               <p className="text-xs text-gray-500">Registration Date</p>
-                              <p className="text-sm">{new Date(selectedTicket.registrationDate).toLocaleString('en-ZA', {
+                              <p className="text-sm">{formatDateTime(selectedTicket.registrationDate, {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
@@ -568,7 +572,7 @@ function AdminDuplicates() {
                                         {statusComment.status.charAt(0).toUpperCase() + statusComment.status.slice(1)}
                                       </span>
                                       <span className="text-xs text-gray-500">
-                                        {new Date(statusComment.createdAt).toLocaleString()}
+                                        {formatDateTime(statusComment.createdAt)}
                                       </span>
                                     </div>
                                     <p className="text-sm text-gray-700 mt-1">{statusComment.comment}</p>

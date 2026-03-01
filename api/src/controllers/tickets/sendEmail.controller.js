@@ -130,7 +130,7 @@ const sendEmail = async (req, res) => {
         <table class="details-table" cellpadding="0" cellspacing="0">
           <tr><td class="label">Ticket ID</td><td class="value">${registration.ticketId}</td></tr>
           <tr><td class="label">Package</td><td class="value">${packageName}</td></tr>
-          <tr><td class="label">Registered</td><td class="value">${new Date(registration.createdAt).toLocaleDateString('en-ZA')}</td></tr>
+          <tr><td class="label">Registered</td><td class="value">${(function() { try { const d = new Date(registration.createdAt); return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('en-ZA', { timeZone: 'Africa/Harare' }); } catch { return '-'; } })()}</td></tr>
           <tr><td class="label">Status</td><td class="value"><span class="status-badge status-${registration.status.toLowerCase()}">${statusLabel}</span></td></tr>
         </table>
       </div>
