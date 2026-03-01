@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import IDCard from "../../components/idcard/IDCard";
 import Footer from "../../components/landing/footer";
+import AdminNavbar from "../../components/admin/AdminNavbar";
 import { API_URL } from "../../utils/api";
 
 const PKG_LABELS = {
@@ -1538,35 +1539,7 @@ function AdminTickets() {
 
   return (
     <div className="min-h-screen bg-[#0c0f2e] flex flex-col">
-      <nav className="sticky top-0 z-50 bg-[#0c0f2e]/90 backdrop-blur-xl border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <Link to="/admin/home" className="text-white text-xl font-bold tracking-tight hover:text-[#00c8ff] transition-colors">SYC2026 <span className="text-[#00c8ff]">Admin</span></Link>
-              <div className="hidden sm:ml-8 sm:flex sm:space-x-2">
-                <Link to="/admin/home" className="px-3 py-2 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-                  Dashboard
-                </Link>
-                <Link to="/admin/tickets" className="px-3 py-2 rounded-lg text-sm font-medium text-white bg-white/10 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg>
-                  Tickets
-                </Link>
-                <Link to="/admin/duplicates" className="px-3 py-2 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/10 flex items-center gap-2 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                  Duplicates
-                </Link>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4 border-l border-white/10 pl-4">
-              <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-500 hover:bg-red-600 border border-red-600 transition-colors" title="Sign out">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                Sign out
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <AdminNavbar onLogout={handleLogout} />
 
       {/* Main Content */}
       <main className="py-10 flex-1">
