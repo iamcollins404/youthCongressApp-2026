@@ -1,0 +1,11 @@
+# Force Node.js provider (npm workspaces monorepo)
+providers = ["node"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm run start"
