@@ -18,7 +18,11 @@ const corsOptions = {
     'https://wnryouthcongress.co.za',
     /^http:\/\/localhost(:\d+)?$/,
   ],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   credentials: true,
+  optionsSuccessStatus: 204,
+  preflightContinue: false,
 };
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));

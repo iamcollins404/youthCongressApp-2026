@@ -1,15 +1,8 @@
 {
-    "rewrites": [
-        { "source": "/(.*)", "destination": "/index.html" }
-    ],
-    "builds": [
-        {
-            "src": "package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "dist"
-            }
-        }
-    ],
-    "buildCommand": "npm run build"
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "http://youthcongress-vnpjp8-bba89e-172-209-217-48.traefik.me/api/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "builds": [{ "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } }],
+  "buildCommand": "npm run build"
 }
