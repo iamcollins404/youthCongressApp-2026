@@ -11,8 +11,16 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware - CORS: allow frontend domain
+const corsOptions = {
+  origin: [
+    'https://www.wnryouthcongress.co.za',
+    'https://wnryouthcongress.co.za',
+    /^http:\/\/localhost(:\d+)?$/,
+  ],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
