@@ -19,7 +19,7 @@
     "concurrently": "^8.2.2"
   },
   "engines": {
-    "node": "18.x"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@azure/communication-email": "^1.1.0"
