@@ -13,6 +13,9 @@ import heavenlyStrings from '../assets/newImages/heavenlystrings.jpeg'
 import chosen from '../assets/newImages/choosen.jpeg'
 import asOne from '../assets/newImages/oneMusic.jpeg'
 import celestialChord from '../assets/newImages/celestialChord.jpeg'
+import pastorSeb from '../assets/newImages/pastorSeb.jpeg'
+import pastorNhlanhla from '../assets/newImages/pastorNhlanhla.jpeg'
+import pastorReece from '../assets/newImages/pastorReece.jpeg'
 // Pastor Xanti Mabenge photo: save image as client/src/assets/images/xanti-mabenge.png then uncomment:
 // import xantiMabenge from '../assets/images/xanti-mabenge.png'
 // Add photo: save as client/src/assets/images/xanti-mabenge.png then uncomment:
@@ -82,7 +85,7 @@ function Index() {
       >
         <div className="nav-inner">
           <Link to="/">
-            <img src={ylogo} alt="Logo" style={{ height: 52, objectFit: 'contain' }} />
+            <img src={ylogo} alt="Logo" style={{ height: 112, objectFit: 'contain' }} />
           </Link>
 
           {/* Desktop nav links */}
@@ -352,9 +355,9 @@ function Index() {
         <div className="reveal"><SectionTitle>Featured Speakers</SectionTitle></div>
         <div className="reveal-stagger speakers-grid">
           {[
-            { name: 'Pastor Sebastian Braxston', role: 'Main Speaker', highlight: true },
-            { name: 'Pastor Nhlanhla Buthelezi', role: 'Speaker' },
-            { name: 'Pastor Reece Anderson', role: 'Speaker' },
+            { name: 'Pastor Sebastian Braxston', role: 'Main Speaker', highlight: true, img: pastorSeb },
+            { name: 'Pastor Nhlanhla Buthelezi', role: 'Speaker', img: pastorNhlanhla },
+            { name: 'Pastor Reece Anderson', role: 'Speaker', img: pastorReece },
             { name: 'Pastor Eugene Carolus', role: 'Speaker' },
             { name: 'Elder Obey Chimuka', role: 'Speaker' },
           ].map((s, i) => (

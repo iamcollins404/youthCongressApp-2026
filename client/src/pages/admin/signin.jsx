@@ -55,7 +55,7 @@ function AdminSignin() {
       <div className="glass-strong animate-scale-in" style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 420, padding: 'clamp(24px, 5vw, 40px)', margin: 'clamp(12px, 3vw, 16px)', borderRadius: 24 }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <img src={ylogo} alt="Logo" style={{ height: 60, margin: '0 auto 16px', objectFit: 'contain' }} />
+          <img src={ylogo} alt="Logo" style={{ height: 88, margin: '0 auto 16px', objectFit: 'contain' }} />
           <h1 style={{ color: 'white', fontSize: 24, fontWeight: 700, marginBottom: 4 }}>SYC2026 Admin</h1>
           <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>Sign in to access the dashboard</p>
         </div>

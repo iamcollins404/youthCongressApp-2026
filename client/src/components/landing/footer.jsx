@@ -20,7 +20,7 @@ function Footer() {
         <div className="footer-grid" style={{ marginBottom: 'clamp(24px, 4vw, 40px)' }}>
           {/* Brand */}
           <div>
-            <img src={ylogo} alt="Logo" style={{ height: 48, objectFit: 'contain', marginBottom: 16, opacity: 0.7 }} />
+            <img src={ylogo} alt="Logo" style={{ height: 72, objectFit: 'contain', marginBottom: 16, opacity: 0.7 }} />
             <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13, lineHeight: 1.7 }}>
               Senior Youth Congress 2026 — a transformative gathering by the Western &amp; Northern Region of the Cape Conference.
             </p>

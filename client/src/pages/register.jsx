@@ -110,7 +110,7 @@ function Register() {
       }}>
         <div className="nav-inner" style={{ height: 60 }}>
           <Link to="/">
-            <img src={ylogo} alt="Logo" style={{ height: 48, objectFit: 'contain' }} />
+            <img src={ylogo} alt="Logo" style={{ height: 72, objectFit: 'contain' }} />
           </Link>
           <Link to="/" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
             <ArrowLeft size={16} />
