@@ -9,12 +9,21 @@ import Footer from '../components/landing/footer'
 import ylogo from '../assets/images/ylogo.png'
 
 import brin from '../assets/images/brin.jpg'
+import heavenlyStrings from '../assets/newImages/heavenlystrings.jpeg'
+import chosen from '../assets/newImages/choosen.jpeg'
+import asOne from '../assets/newImages/oneMusic.jpeg'
+import celestialChord from '../assets/newImages/celestialChord.jpeg'
+// Pastor Xanti Mabenge photo: save image as client/src/assets/images/xanti-mabenge.png then uncomment:
+// import xantiMabenge from '../assets/images/xanti-mabenge.png'
+// Add photo: save as client/src/assets/images/xanti-mabenge.png then uncomment:
+// import xantiMabenge from '../assets/images/xanti-mabenge.png'
 
 const CAPE_TOWN_BG = 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1920&q=80'
 
 const navLinks = [
   { id: 'home', label: 'Home' },
   { id: 'about', label: 'About' },
+  { id: 'welcome', label: 'Welcome' },
   { id: 'schedule', label: 'Schedule' },
   { id: 'speakers', label: 'Speakers' },
   { id: 'contact', label: 'Contact' },
@@ -273,8 +282,33 @@ function Index() {
         </div>
       </Section>
 
+      {/* ═══════════════ WELCOME FROM PS LAING ═══════════════ */}
+      <Section id="welcome" bg="#111540">
+        <div className="reveal" style={{ maxWidth: 800, margin: '0 auto' }}>
+          <SectionTitle>Welcome from the Event Director</SectionTitle>
+          <div className="glass" style={{ padding: 'clamp(24px, 4vw, 40px)', textAlign: 'center', overflow: 'hidden' }}>
+            <div style={{ width: 100, height: 100, margin: '0 auto 20px', borderRadius: '50%', overflow: 'hidden', border: '3px solid rgba(0,200,255,0.2)' }}>
+              <img src={brin} alt="Pastor Brinton Laing" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <h3 style={{ color: 'white', fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Pastor Brinton Laing</h3>
+            <p style={{ color: '#00c8ff', fontSize: 14, fontWeight: 600, marginBottom: 28 }}>Event Director</p>
+            <div style={{ textAlign: 'left', color: 'rgba(255,255,255,0.85)', fontSize: 'clamp(15px, 2.2vw, 17px)', lineHeight: 1.85 }}>
+              <p style={{ marginBottom: 20 }}>
+                Welcome to Congress 2026 themed &ldquo;Connected.&rdquo; In a world where it is easy to feel distracted, distant, or disconnected, this weekend is an invitation to draw closer — closer to God and closer to one another. We gather here not by accident, but by divine purpose, believing that when we stay connected to Christ, our lives are strengthened, guided, and transformed.
+              </p>
+              <p style={{ marginBottom: 20 }}>
+                Jesus reminds us in John 15:5, &ldquo;I am the vine; you are the branches. If you remain in Me and I in you, you will bear much fruit; apart from Me you can do nothing.&rdquo; This powerful promise assures us that true growth, strength, and purpose come from staying connected to Him. As we worship, learn, and fellowship together, may we experience what it truly means to remain in Christ.
+              </p>
+              <p style={{ marginBottom: 0 }}>
+                May this weekend deepen your connection with God, build meaningful friendships, and remind you that you are part of something bigger than yourself. You belong. You matter. And together, as we stay connected to the True Vine, we will grow, thrive, and shine for His glory. Welcome — this weekend is for you!
+              </p>
+            </div>
+          </div>
+        </div>
+      </Section>
+
       {/* ═══════════════ WHAT TO EXPECT ═══════════════ */}
-      <Section bg="#111540">
+      <Section>
         <div className="reveal"><SectionTitle>What to Expect</SectionTitle></div>
         <div className="reveal-stagger expect-grid">
           {[
@@ -318,21 +352,20 @@ function Index() {
         <div className="reveal"><SectionTitle>Featured Speakers</SectionTitle></div>
         <div className="reveal-stagger speakers-grid">
           {[
-            { name: 'Ps Sebastian Braxton', role: 'Main Speaker (USA)', highlight: true },
-            { name: 'Ps Benjamin McKenzie', role: 'Speaker' },
-            { name: 'Ps Nhlahla Buthelezi', role: 'Speaker' },
-            { name: 'Ps Reece Anderson', role: 'Speaker' },
-            { name: 'Dr Platts', role: 'Speaker' },
-            { name: 'Mr Obey Chimuka', role: 'Speaker' },
+            { name: 'Pastor Sebastian Braxston', role: 'Main Speaker', highlight: true },
+            { name: 'Pastor Nhlanhla Buthelezi', role: 'Speaker' },
+            { name: 'Pastor Reece Anderson', role: 'Speaker' },
+            { name: 'Pastor Eugene Carolus', role: 'Speaker' },
+            { name: 'Elder Obey Chimuka', role: 'Speaker' },
           ].map((s, i) => (
             <div key={i} className="glass" style={{ padding: 28, textAlign: 'center', border: s.highlight ? '1px solid rgba(0,200,255,0.3)' : undefined }}>
               <div style={{
-                width: 80, height: 80, margin: '0 auto 16px', borderRadius: '50%',
-                background: s.highlight ? 'linear-gradient(135deg, rgba(0,200,255,0.2), rgba(0,102,238,0.2))' : 'rgba(255,255,255,0.05)',
+                width: 80, height: 80, margin: '0 auto 16px', borderRadius: '50%', overflow: 'hidden',
+                background: s.img ? 'transparent' : (s.highlight ? 'linear-gradient(135deg, rgba(0,200,255,0.2), rgba(0,102,238,0.2))' : 'rgba(255,255,255,0.05)'),
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 border: '2px solid rgba(0,200,255,0.15)',
               }}>
-                <span style={{ fontSize: 28, color: 'rgba(255,255,255,0.4)' }}>{s.name.split(' ').map(w => w[0]).join('')}</span>
+                {s.img ? <img src={s.img} alt={s.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 28, color: 'rgba(255,255,255,0.4)' }}>{s.name.split(' ').map(w => w[0]).join('')}</span>}
               </div>
               <h3 style={{ color: 'white', fontSize: 16, fontWeight: 700, marginBottom: 4 }}>{s.name}</h3>
               <p style={{ color: s.highlight ? '#00c8ff' : 'rgba(255,255,255,0.4)', fontWeight: 500, fontSize: 13 }}>{s.role}</p>
@@ -347,7 +380,8 @@ function Index() {
         <div className="reveal-stagger leaders-grid">
           {[
             { name: 'Pastor Brinton Laing', role: 'Event Director', img: brin },
-            { name: 'Bro Prince', role: 'Youth Congress Coordinator' },
+            { name: 'Pastor Xanti Mabenge', role: 'Event Leadership' },
+            { name: 'Bro Prince Mabenge', role: 'Youth Congress Coordinator' },
           ].map((d, i) => (
             <div key={i} className="glass" style={{ padding: 28, textAlign: 'center' }}>
               <div style={{
@@ -372,16 +406,24 @@ function Index() {
       <Section bg="#111540">
         <div className="reveal"><SectionTitle>Featured Singing Groups</SectionTitle></div>
         <div className="reveal-stagger singing-grid">
-          {['Chosen SG', 'Heavenly Strings', 'Five Stones', 'As One', 'Celestial Chord'].map((name, i) => (
-            <div key={i} className="glass" style={{ padding: 28, textAlign: 'center' }}>
-              <div style={{
-                width: 64, height: 64, margin: '0 auto 16px', borderRadius: '50%',
-                background: 'rgba(0,200,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '2px solid rgba(0,200,255,0.12)',
-              }}>
-                <Music size={24} color="#00c8ff" />
+          {[
+            { name: 'Chosen SG', img: chosen },
+            { name: 'Heavenly Strings', img: heavenlyStrings },
+            { name: 'Five Stones' },
+            { name: 'One Music', img: asOne },
+            { name: 'Celestial Chord', img: celestialChord },
+          ].map((g, i) => (
+            <div key={i} className="glass singing-card">
+              <div className="singing-card-image-wrap">
+                {g.img ? (
+                  <img src={g.img} alt={g.name} className="singing-card-img" />
+                ) : (
+                  <span className="singing-card-placeholder">
+                    <Music size={48} color="#00c8ff" />
+                  </span>
+                )}
               </div>
-              <h3 style={{ color: 'white', fontSize: 16, fontWeight: 700 }}>{name}</h3>
+              <h3 className="singing-card-title">{g.name}</h3>
             </div>
           ))}
         </div>
