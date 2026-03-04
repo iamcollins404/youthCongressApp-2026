@@ -84,7 +84,7 @@ function Index() {
         }}
       >
         <div className="nav-inner">
-          <Link to="/" className="max-sm:flex max-sm:justify-center max-sm:w-full">
+          <Link to="/" className="max-sm:flex max-sm:justify-center max-sm:w-full" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img src={ylogo} alt="Logo" className="logo-mobile-big max-sm:block max-sm:mx-auto max-sm:mt-3" style={{ height: 48, objectFit: 'contain' }} />
           </Link>
 

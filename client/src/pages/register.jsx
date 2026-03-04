@@ -109,7 +109,7 @@ function Register() {
         borderBottom: '1px solid rgba(255,255,255,0.05)',
       }}>
         <div className="nav-inner" style={{ height: 60 }}>
-          <Link to="/" className="max-sm:flex max-sm:justify-center max-sm:w-full">
+          <Link to="/" className="max-sm:flex max-sm:justify-center max-sm:w-full" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img src={ylogo} alt="Logo" className="logo-mobile-big max-sm:block max-sm:mx-auto max-sm:mt-3" style={{ height: 44, objectFit: 'contain' }} />
           </Link>
           <Link to="/" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
