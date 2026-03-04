@@ -148,7 +148,7 @@ function Ticket() {
       {/* Navbar */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(12,15,46,0.9)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
         <div className="nav-inner" style={{ height: 60 }}>
-          <Link to="/"><img src={ylogo} alt="Logo" style={{ height: 72, objectFit: 'contain' }} /></Link>
+          <Link to="/" className="max-sm:flex max-sm:justify-center max-sm:w-full"><img src={ylogo} alt="Logo" className="logo-mobile-big max-sm:block max-sm:mx-auto max-sm:mt-3" style={{ height: 44, objectFit: 'contain' }} /></Link>
           <Link to="/" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
             <ArrowLeft size={16} />
             Home

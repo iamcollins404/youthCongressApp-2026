@@ -84,8 +84,8 @@ function Index() {
         }}
       >
         <div className="nav-inner">
-          <Link to="/">
-            <img src={ylogo} alt="Logo" style={{ height: 112, objectFit: 'contain' }} />
+          <Link to="/" className="max-sm:flex max-sm:justify-center max-sm:w-full">
+            <img src={ylogo} alt="Logo" className="logo-mobile-big max-sm:block max-sm:mx-auto max-sm:mt-3" style={{ height: 48, objectFit: 'contain' }} />
           </Link>
 
           {/* Desktop nav links */}
@@ -231,10 +231,10 @@ function Index() {
             <span style={{ color: 'rgba(0,200,255,0.6)' }}>(USA)</span>
           </p>
 
-          <div className="animate-fade-in-up" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, animationDelay: '1.1s' }}>
+          <div className="animate-fade-in-up flex flex-wrap justify-center gap-3 max-sm:flex-col max-sm:items-center sm:gap-3" style={{ animationDelay: '1.1s' }}>
             <Link
               to="/register"
-              className="btn-primary"
+              className="btn-primary w-full max-sm:max-w-[280px] sm:w-auto text-center"
               style={{
                 fontSize: 'clamp(15px, 2.5vw, 18px)',
                 padding: 'clamp(12px, 2vw, 16px) clamp(28px, 5vw, 40px)',
@@ -244,7 +244,7 @@ function Index() {
             </Link>
             <button
               onClick={() => scrollTo('about')}
-              className="btn-ghost"
+              className="btn-ghost w-full max-sm:max-w-[280px] sm:w-auto"
               style={{
                 fontSize: 'clamp(15px, 2.5vw, 18px)',
                 padding: 'clamp(12px, 2vw, 16px) clamp(24px, 4vw, 32px)',

@@ -429,13 +429,50 @@ body {
   margin: 0 auto;
 }
 
-/* ─── Mobile breakpoints ─── */
+/* Logos: slightly bigger on mobile */
+@media (max-width: 768px) {
+  .logo-mobile-big {
+    width: 62vw !important;
+    max-width: 190px !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .logo-mobile-big {
+    width: 65vw !important;
+    max-width: 170px !important;
+  }
+}
+
+/* Mobile nav: logo on top, hamburger below, minimal spacing */
 @media (max-width: 768px) {
   .nav-inner {
-    padding: 0 16px;
-    height: 60px;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 8px 12px 10px !important;
+    gap: 8px !important;
   }
+  .nav-inner > a:first-child {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .nav-inner .logo-mobile-big {
+    width: 58vw !important;
+    max-width: 190px !important;
+    height: auto !important;
+    max-height: 48px !important;
+    object-fit: contain !important;
+  }
+}
 
+/* ─── Mobile breakpoints ─── */
+@media (max-width: 768px) {
   .section-responsive {
     padding: 64px 16px;
   }
@@ -489,8 +526,7 @@ body {
   }
 
   .nav-inner {
-    padding: 0 14px;
-    height: 56px;
+    padding: 18px 14px 12px;
   }
 }
 
@@ -515,11 +551,10 @@ body {
   .nav-desktop {
     display: none !important;
   }
-  .nav-mobile-btn {
-    display: flex !important;
-  }
+  /* Hamburger hidden for now */
+  .nav-mobile-btn,
   .nav-mobile-dropdown {
-    display: block !important;
+    display: none !important;
   }
 }
 
