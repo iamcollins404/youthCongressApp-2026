@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import confetti from 'canvas-confetti'
 import {
   ArrowLeft, AlertTriangle, User, ShieldAlert, Package,
-  FileText, Upload, CheckCircle, Loader
+  FileText, Upload, CheckCircle, Loader, Ticket, UserPlus
 } from 'lucide-react'
 import { API_URL } from '../utils/api'
 import Footer from '../components/landing/footer'
@@ -27,6 +28,7 @@ function Register() {
   })
 
   const [uploadedFiles, setUploadedFiles] = useState({ passportPhoto: null, paymentProof: null })
+  const [successModal, setSuccessModal] = useState({ show: false, ticketId: null })
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -77,7 +79,13 @@ function Register() {
         paymentProofUrl: uploadedFiles.paymentProof.url,
       }
       const res = await axios.post(`${API_URL}/tickets/new`, payload)
-      if (res.data?.success && res.data?.ticketId) { navigate(`/ticket/${res.data.ticketId}`); return }
+      if (res.data?.success && res.data?.ticketId) {
+        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } })
+        confetti({ particleCount: 80, spread: 100, origin: { y: 0.5, x: 0.3 } })
+        confetti({ particleCount: 80, spread: 100, origin: { y: 0.5, x: 0.7 } })
+        setSuccessModal({ show: true, ticketId: res.data.ticketId })
+        return
+      }
       setError(res.data?.message || 'Registration failed.')
     } catch (err) { setError(err.response?.data?.message || 'Registration failed.') }
     finally { setSubmitting(false) }
@@ -325,6 +333,64 @@ function Register() {
           By registering you agree to the event terms and conditions.
         </p>
       </div>
+
+      {/* Success modal */}
+      {successModal.show && (
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 100,
+            background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 20,
+          }}
+          onClick={(e) => e.target === e.currentTarget && setSuccessModal({ show: false, ticketId: null })}
+        >
+          <div
+            className="glass"
+            style={{
+              maxWidth: 400, width: '100%', padding: 32, borderRadius: 20,
+              textAlign: 'center', border: '1px solid rgba(0,200,255,0.2)',
+              boxShadow: '0 24px 48px rgba(0,0,0,0.4)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ width: 64, height: 64, margin: '0 auto 20px', borderRadius: '50%', background: 'rgba(0,200,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckCircle size={36} color="#00c8ff" />
+            </div>
+            <h2 style={{ color: 'white', fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Registration successful!</h2>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, marginBottom: 28 }}>You&apos;re all set for Youth Congress 2026.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <button
+                onClick={() => navigate(`/ticket/${successModal.ticketId}`)}
+                style={{
+                  width: '100%', padding: '14px 24px', borderRadius: 50,
+                  background: 'linear-gradient(135deg, #00c8ff, #0066ee)', color: 'white',
+                  fontWeight: 700, fontSize: 16, border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                }}
+              >
+                <Ticket size={20} /> View my ticket
+              </button>
+              <button
+                onClick={() => {
+                  setSuccessModal({ show: false, ticketId: null })
+                  setForm({ firstName: '', surname: '', email: '', contactNumber: '', conference: '', churchOrOrganization: '', gender: '', age: '', delegateType: '', emergencyContactName: '', emergencyContactNumber: '', package: 'basicPack', hoodieSize: '', churchInsured: 'true' })
+                  setUploadedFiles({ passportPhoto: null, paymentProof: null })
+                  setError(null)
+                }}
+                style={{
+                  width: '100%', padding: '14px 24px', borderRadius: 50,
+                  background: 'rgba(255,255,255,0.08)', color: 'white',
+                  fontWeight: 600, fontSize: 16, border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                }}
+              >
+                <UserPlus size={20} /> Register again
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
