@@ -530,7 +530,7 @@ const IDCard = ({
       ctx.shadowOffsetY = 0;
     };
 
-    // Load images and draw — draw when logo loads (show "Loading…" if photo pending), then redraw when photo loads/fails
+    // Load images and draw — only show card when BOTH photo AND logos are loaded; otherwise keep loading
     const finishAndSetReady = async () => {
       drawBadge();
       await drawEnhancedQRCode();
@@ -539,19 +539,24 @@ const IDCard = ({
 
     const loadImagesAndDraw = async () => {
       let logoLoaded = false;
+      let logoLoadSuccess = false;
       let photoResolved = false;
-      const totalNeeded = 2;
+      let photoLoadSuccess = false;
+
+      const tryFinish = async () => {
+        if (!logoLoaded || !photoResolved) return;
+        // Only show card when we have both photo and logos — otherwise keep loading
+        if (!logoLoadSuccess || !photoLoadSuccess) return;
+        await finishAndSetReady();
+      };
 
       const tryDraw = async () => {
         if (!logoLoaded) return;
         if (photoUrl && !photoResolved) {
-          // Logo done, photo still loading — draw with "Loading…" in circle
           drawBadge();
           await drawEnhancedQRCode();
-          // Don't setIsReady yet — wait for photo
         } else {
-          // Both done — final draw
-          await finishAndSetReady();
+          await tryFinish();
         }
       };
 
@@ -562,15 +567,18 @@ const IDCard = ({
         logoImg.onload = () => {
           logoImageRef.current = logoImg;
           logoLoaded = true;
+          logoLoadSuccess = true;
           tryDraw();
         };
         logoImg.onerror = () => {
           logoLoaded = true;
+          logoLoadSuccess = false;
           tryDraw();
         };
         logoImg.src = logosImg;
       } else {
         logoLoaded = true;
+        logoLoadSuccess = false;
         tryDraw();
       }
 
@@ -581,15 +589,18 @@ const IDCard = ({
         photoImg.onload = () => {
           photoImageRef.current = photoImg;
           photoResolved = true;
-          finishAndSetReady();
+          photoLoadSuccess = true;
+          tryFinish();
         };
         photoImg.onerror = () => {
           photoResolved = true;
-          finishAndSetReady();
+          photoLoadSuccess = false;
+          tryFinish();
         };
         photoImg.src = photoUrl;
       } else {
         photoResolved = true;
+        photoLoadSuccess = false;
         tryDraw();
       }
     };

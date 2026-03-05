@@ -22,6 +22,7 @@ import pastorReece from '../assets/newImages/pastorReece.jpeg'
 import pastorEugene from '../assets/newImages/pastoreugiene.jpeg'
 import pastorXanti from '../assets/newImages/pastorXanti.jpeg'
 import obeyChimuka from '../assets/newImages/obeyChimuka.jpeg'
+import pastorAubrey from '../assets/newImages/pastoraubrey .jpeg'
 
 const CAPE_TOWN_BG = 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1920&q=80'
 
@@ -411,6 +412,7 @@ function Index() {
             { name: 'Pastor Reece Anderson', role: 'Speaker', img: pastorReece, imgPosition: 'center' },
             { name: 'Pastor Eugene Carolus', role: 'Speaker', img: pastorEugene, imgPosition: '65% 25%' },
             { name: 'Elder Obey Chimuka', role: 'Speaker', img: obeyChimuka },
+            { name: 'Pastor Aubrey John Devilliers', role: 'Speaker', img: pastorAubrey },
           ].map((s, i) => (
             <div key={i} className="glass" style={{ padding: 28, textAlign: 'center', border: s.highlight ? '1px solid rgba(0,200,255,0.3)' : undefined }}>
               <div style={{
