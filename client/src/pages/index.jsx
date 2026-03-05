@@ -15,11 +15,13 @@ import chosen from '../assets/newImages/choosen.jpeg'
 import asOne from '../assets/newImages/oneMusic.jpeg'
 import celestialChord from '../assets/newImages/celestialChord.jpeg'
 import fiveStones from '../assets/newImages/fiveStones.jpeg'
+import gumboFamily from '../assets/newImages/gumboFamily.jpeg'
 import pastorSeb from '../assets/newImages/pastorSeb.jpeg'
 import pastorNhlanhla from '../assets/newImages/pastorNhlanhla.jpeg'
 import pastorReece from '../assets/newImages/pastorReece.jpeg'
 import pastorEugene from '../assets/newImages/pastoreugiene.jpeg'
 import pastorXanti from '../assets/newImages/pastorXanti.jpeg'
+import obeyChimuka from '../assets/newImages/obeyChimuka.jpeg'
 
 const CAPE_TOWN_BG = 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1920&q=80'
 
@@ -408,7 +410,7 @@ function Index() {
             { name: 'Pastor Nhlanhla Buthelezi', role: 'Speaker', img: pastorNhlanhla, imgPosition: '35% 25%' },
             { name: 'Pastor Reece Anderson', role: 'Speaker', img: pastorReece, imgPosition: 'center' },
             { name: 'Pastor Eugene Carolus', role: 'Speaker', img: pastorEugene, imgPosition: '65% 25%' },
-            { name: 'Elder Obey Chimuka', role: 'Speaker' },
+            { name: 'Elder Obey Chimuka', role: 'Speaker', img: obeyChimuka },
           ].map((s, i) => (
             <div key={i} className="glass" style={{ padding: 28, textAlign: 'center', border: s.highlight ? '1px solid rgba(0,200,255,0.3)' : undefined }}>
               <div style={{
@@ -463,6 +465,7 @@ function Index() {
             { name: 'Five Stones', img: fiveStones, imgFit: 'contain' },
             { name: 'As one Music Ministry', img: asOne },
             { name: 'Celestial Chord', img: celestialChord },
+            { name: 'Gumbo Family', img: gumboFamily },
           ].map((g, i) => (
             <div key={i} className="glass singing-card">
               <div className="singing-card-image-wrap">
