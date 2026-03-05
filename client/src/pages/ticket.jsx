@@ -21,6 +21,7 @@ function Ticket() {
   const [error, setError] = useState(null)
   const [downloadingPdf, setDownloadingPdf] = useState(false)
   const [idCardPhotoDataUrl, setIdCardPhotoDataUrl] = useState(null)
+  const [photoLoadComplete, setPhotoLoadComplete] = useState(false)
 
   const [ticketData, setTicketData] = useState({
     ticketId: '', status: '', firstName: '', surname: '',
@@ -65,7 +66,7 @@ function Ticket() {
           email: ticket.email, contactNumber: ticket.contactNumber,
           conference: conferenceName, package: packageName,
           hoodieSize: ticket.hoodieSize,
-          passportPhoto: ticket.passportPhoto || '',
+          passportPhoto: (typeof ticket.passportPhoto === 'string' ? ticket.passportPhoto : ticket.passportPhoto?.url) || '',
           registrationDate: formatDate(ticket.createdAt),
           eventName: 'Senior Youth Congress 2026',
           eventDate: '12 – 16 JUNE 2026',
@@ -90,23 +91,34 @@ function Ticket() {
     }
   }, [ticketData, qrCanvasRef])
 
-  // Load photo for ID card when ticket is approved
+  // Load photo for ID card when ticket is approved — wait for fetch before rendering ID
   useEffect(() => {
     if (!ticketData.passportPhoto || ticketData.status !== 'Approved') {
       setIdCardPhotoDataUrl(null)
+      setPhotoLoadComplete(true)
       return
     }
+    setPhotoLoadComplete(false)
     const base = API_URL.replace(/\/api\/?$/, '')
     const photoUrl = ticketData.passportPhoto.startsWith('http') ? ticketData.passportPhoto : `${base}${ticketData.passportPhoto}`
     fetch(photoUrl, { mode: 'cors' })
       .then(res => res.ok ? res.blob() : null)
       .then(blob => {
-        if (!blob) return
+        if (!blob) {
+          setPhotoLoadComplete(true)
+          return
+        }
         const reader = new FileReader()
-        reader.onloadend = () => setIdCardPhotoDataUrl(reader.result)
+        reader.onloadend = () => {
+          setIdCardPhotoDataUrl(reader.result)
+          setPhotoLoadComplete(true)
+        }
         reader.readAsDataURL(blob)
       })
-      .catch(() => setIdCardPhotoDataUrl(null))
+      .catch(() => {
+        setIdCardPhotoDataUrl(null)
+        setPhotoLoadComplete(true)
+      })
   }, [ticketData.passportPhoto, ticketData.status])
 
   const handleDownload = async () => {
@@ -163,9 +175,9 @@ function Ticket() {
         <div className="animate-fade-in-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, animationDelay: '0.1s', flexWrap: 'wrap', gap: 12 }}>
           <h1 style={{ color: 'white', fontSize: 'clamp(22px, 5vw, 28px)', fontWeight: 700 }}>Your Ticket</h1>
           {!loading && !error && ticketData.status === 'Approved' && (
-            <button onClick={handleDownload} disabled={downloadingPdf}
+            <button onClick={handleDownload} disabled={downloadingPdf || (!photoLoadComplete && !!ticketData.passportPhoto)}
               className="btn-primary" style={{ padding: 'clamp(8px, 1.5vw, 10px) clamp(16px, 3vw, 24px)', fontSize: 'clamp(13px, 2vw, 14px)', opacity: downloadingPdf ? 0.5 : 1, cursor: downloadingPdf ? 'not-allowed' : 'pointer' }}>
-              {downloadingPdf ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Downloading...</> : <><Download size={14} style={{ display: 'inline', marginRight: 6 }} /> Download ID Card</>}
+              {downloadingPdf ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Downloading…</> : !photoLoadComplete && ticketData.passportPhoto ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Loading photo…</> : <><Download size={14} style={{ display: 'inline', marginRight: 6 }} /> Download ID Card</>}
             </button>
           )}
         </div>
@@ -190,8 +202,8 @@ function Ticket() {
           </div>
         )}
 
-        {/* Hidden ID card for download - rendered off-screen */}
-        {!loading && !error && ticketData.status === 'Approved' && (
+        {/* Hidden ID card for download - wait for photo to load before rendering */}
+        {!loading && !error && ticketData.status === 'Approved' && photoLoadComplete && (
           <div
             ref={idCardRef}
             style={{

@@ -203,8 +203,27 @@ const IDCard = ({
           sourceX, sourceY, sourceWidth, sourceHeight, // Source rectangle (crop area)
           circleX - circleRadius, circleY - circleRadius, targetSize, targetSize // Destination rectangle
         );
+      } else if (photoUrl && !photoImageRef.current) {
+        // Photo URL provided but still loading — show loading state
+        const circleGradient = ctx.createRadialGradient(circleX - 20, circleY - 20, 0, circleX, circleY, circleRadius);
+        circleGradient.addColorStop(0, 'rgba(0,200,255,0.4)');
+        circleGradient.addColorStop(0.6, 'rgba(0,102,238,0.5)');
+        circleGradient.addColorStop(1, '#1e1a5e');
+        
+        ctx.fillStyle = circleGradient;
+        ctx.beginPath();
+        ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = 'bold 14px "Segoe UI"';
+        ctx.textAlign = 'center';
+        ctx.fillText('Loading…', circleX, circleY - 4);
+        ctx.font = '12px "Segoe UI"';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.fillText('photo', circleX, circleY + 12);
       } else {
-        // Draw placeholder with gradient
+        // No photo URL or load failed — show placeholder
         const circleGradient = ctx.createRadialGradient(circleX - 20, circleY - 20, 0, circleX, circleY, circleRadius);
         circleGradient.addColorStop(0, '#4db8ff');
         circleGradient.addColorStop(0.6, '#0066ee');
@@ -215,7 +234,6 @@ const IDCard = ({
         ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
         ctx.fill();
         
-        // Add placeholder text
         ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
         ctx.font = 'bold 16px "Segoe UI"';
         ctx.textAlign = 'center';
@@ -236,34 +254,38 @@ const IDCard = ({
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       
-      // Draw logos first - positioned far right
+      // Draw logos - 2x2 grid on the left (4 logos: two per row, two rows)
       if (logoImageRef.current && logoImageRef.current.complete) {
-        const logoWidth = 168; // Scaled for new canvas size
-        const logoHeight = (logoImageRef.current.height / logoImageRef.current.width) * logoWidth;
-        ctx.drawImage(
-          logoImageRef.current,
-          canvas.width - logoWidth - 28, // Far right with scaled margin
-          28,
-          logoWidth,
-          logoHeight
-        );
+        const img = logoImageRef.current;
+        const singleW = 72;
+        const singleH = img.height * (singleW / (img.width / 4));
+        const gap = 6;
+        const startX = 28;
+        const startY = 36;
+        const qw = img.width / 4;
+        ctx.drawImage(img, 0, 0, qw, img.height, startX, startY, singleW, singleH);
+        ctx.drawImage(img, qw, 0, qw, img.height, startX + singleW + gap, startY, singleW, singleH);
+        ctx.drawImage(img, qw * 2, 0, qw, img.height, startX, startY + singleH + gap, singleW, singleH);
+        ctx.drawImage(img, qw * 3, 0, qw, img.height, startX + singleW + gap, startY + singleH + gap, singleW, singleH);
       }
       
-      // Main title with enhanced styling - positioned far right
+      // Main title - right side, next to profile pic (not above it)
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 24px "Segoe UI"'; // Reduced font size
-      ctx.textAlign = 'right'; // Right align text
-      
-      // Add text shadow
+      ctx.font = 'bold 24px "Segoe UI"';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
       ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
       ctx.shadowBlur = 3;
       ctx.shadowOffsetY = 2;
       
-      ctx.fillText('CC-NCSA', canvas.width - 28, 130); // Moved lower for more space
-      
-      ctx.font = 'bold 26px "Segoe UI"'; // Reduced font size
-      ctx.fillText('SENIOR YOUTH', canvas.width - 28, 165); // Moved lower
-      ctx.fillText('CONGRESS 2026', canvas.width - 28, 200);
+      const textX = canvas.width - 28;
+      const lineSpacing = 34;
+      const blockTop = 52;
+      ctx.fillText('CC-NCSA', textX, blockTop);
+      ctx.font = 'bold 26px "Segoe UI"';
+      ctx.fillText('SENIOR YOUTH', textX, blockTop + lineSpacing);
+      ctx.fillText('CONGRESS', textX, blockTop + lineSpacing * 2);
+      ctx.fillText('2026', textX, blockTop + lineSpacing * 3);
       
       // Reset shadow and text alignment
       ctx.shadowColor = 'transparent';
@@ -508,55 +530,70 @@ const IDCard = ({
       ctx.shadowOffsetY = 0;
     };
 
-    // Load images and draw
+    // Load images and draw — draw when logo loads (show "Loading…" if photo pending), then redraw when photo loads/fails
+    const finishAndSetReady = async () => {
+      drawBadge();
+      await drawEnhancedQRCode();
+      setIsReady(true);
+    };
+
     const loadImagesAndDraw = async () => {
-      let imagesLoaded = 0;
-      const totalImages = 2;
-      
-      const checkAllLoaded = async () => {
-        imagesLoaded++;
-        if (imagesLoaded === totalImages) {
-          // First draw everything except QR code
+      let logoLoaded = false;
+      let photoResolved = false;
+      const totalNeeded = 2;
+
+      const tryDraw = async () => {
+        if (!logoLoaded) return;
+        if (photoUrl && !photoResolved) {
+          // Logo done, photo still loading — draw with "Loading…" in circle
           drawBadge();
-          // Then draw QR code asynchronously
           await drawEnhancedQRCode();
-          setIsReady(true);
+          // Don't setIsReady yet — wait for photo
+        } else {
+          // Both done — final draw
+          await finishAndSetReady();
         }
       };
-      
+
       // Load logo
       if (logosImg) {
         const logoImg = new Image();
         logoImg.crossOrigin = 'anonymous';
         logoImg.onload = () => {
           logoImageRef.current = logoImg;
-          checkAllLoaded();
+          logoLoaded = true;
+          tryDraw();
         };
         logoImg.onerror = () => {
-          checkAllLoaded();
+          logoLoaded = true;
+          tryDraw();
         };
         logoImg.src = logosImg;
       } else {
-        checkAllLoaded();
+        logoLoaded = true;
+        tryDraw();
       }
-      
+
       // Load photo
       if (photoUrl) {
         const photoImg = new Image();
         photoImg.crossOrigin = 'anonymous';
         photoImg.onload = () => {
           photoImageRef.current = photoImg;
-          checkAllLoaded();
+          photoResolved = true;
+          finishAndSetReady();
         };
         photoImg.onerror = () => {
-          checkAllLoaded();
+          photoResolved = true;
+          finishAndSetReady();
         };
         photoImg.src = photoUrl;
       } else {
-        checkAllLoaded();
+        photoResolved = true;
+        tryDraw();
       }
     };
-    
+
     loadImagesAndDraw();
     
   }, [name, id, conference, photoUrl]);
