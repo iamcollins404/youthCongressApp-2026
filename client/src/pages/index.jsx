@@ -238,7 +238,7 @@ function Index() {
           </div>
 
           {/* Date + location */}
-          <div className="animate-fade-in-up" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 24, animationDelay: '0.8s' }}>
+          <div className="animate-fade-in-up" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 'clamp(24px, 5vw, 40px)', animationDelay: '0.8s' }}>
             <span className="glass-strong" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: 'clamp(8px, 1.5vw, 10px) clamp(14px, 2.5vw, 20px)', borderRadius: 50, fontSize: 'clamp(12px, 2.2vw, 14px)' }}>
               <Calendar size={16} color="#00c8ff" style={{ flexShrink: 0 }} />
               <strong style={{ color: 'white' }}>12 – 16 June 2026</strong>
@@ -248,11 +248,6 @@ function Index() {
               <span style={{ color: 'rgba(255,255,255,0.9)' }}>Saldanha, West Coast, Cape Town</span>
             </span>
           </div>
-
-          <p className="animate-fade-in" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 'clamp(14px, 2.5vw, 16px)', marginBottom: 'clamp(24px, 5vw, 40px)', animationDelay: '1s' }}>
-            With <span style={{ color: 'white', fontWeight: 600 }}>Pastor Sebastian Braxton</span>{' '}
-            <span style={{ color: 'rgba(0,200,255,0.6)' }}>(USA)</span>
-          </p>
 
           <div className="animate-fade-in-up flex flex-wrap justify-center gap-3 max-sm:flex-col max-sm:items-center sm:gap-3" style={{ animationDelay: '1.1s' }}>
             <Link
@@ -409,7 +404,7 @@ function Index() {
         <div className="reveal"><SectionTitle>Featured Speakers</SectionTitle></div>
         <div className="reveal-stagger speakers-grid">
           {[
-            { name: 'Pastor Sebastian Braxston', role: 'Main Speaker', highlight: true, img: pastorSeb, imgPosition: 'center 20%' },
+            { name: 'Pastor Sebastian Braxston', role: 'Speaker', highlight: true, img: pastorSeb, imgPosition: 'center 20%' },
             { name: 'Pastor Nhlanhla Buthelezi', role: 'Speaker', img: pastorNhlanhla, imgPosition: '35% 25%' },
             { name: 'Pastor Reece Anderson', role: 'Speaker', img: pastorReece, imgPosition: 'center' },
             { name: 'Pastor Eugene Carolus', role: 'Speaker', img: pastorEugene, imgPosition: '65% 25%' },
@@ -588,6 +583,11 @@ function Index() {
           <div className="glass" style={{ padding: 24, textAlign: 'center' }}>
             <h4 style={{ color: 'white', fontWeight: 700, marginBottom: 8 }}>Gloria Yako</h4>
             <p style={{ color: '#00c8ff', fontWeight: 600, marginBottom: 4 }}>+27 79 575 6977</p>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>youthwr@cc.adventist.org</p>
+          </div>
+          <div className="glass" style={{ padding: 24, textAlign: 'center' }}>
+            <h4 style={{ color: 'white', fontWeight: 700, marginBottom: 8 }}>Ps Mabenge</h4>
+            <p style={{ color: '#00c8ff', fontWeight: 600, marginBottom: 4 }}>+27 73 101 7657</p>
             <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>youthwr@cc.adventist.org</p>
           </div>
         </div>
