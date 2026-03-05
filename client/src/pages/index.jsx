@@ -9,7 +9,7 @@ import Footer from '../components/landing/footer'
 import LogoWatermarks from '../components/landing/LogoWatermarks'
 import ylogo from '../assets/images/ylogo.png'
 
-import brin from '../assets/images/brin.jpg'
+import psLaing from '../assets/newImages/pslang.jpeg'
 import heavenlyStrings from '../assets/newImages/heavenlystrings.jpeg'
 import chosen from '../assets/newImages/choosen.jpeg'
 import asOne from '../assets/newImages/oneMusic.jpeg'
@@ -309,7 +309,7 @@ function Index() {
           <SectionTitle>Welcome from the Event Director</SectionTitle>
           <div className="glass" style={{ padding: 'clamp(24px, 4vw, 40px)', textAlign: 'center', overflow: 'hidden' }}>
             <div style={{ width: 100, height: 100, margin: '0 auto 20px', borderRadius: '50%', overflow: 'hidden', border: '3px solid rgba(0,200,255,0.2)' }}>
-              <img src={brin} alt="Pastor Brinton Laing" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+              <img src={psLaing} alt="Pastor Brinton Laing" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
             </div>
             <h3 style={{ color: 'white', fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Pastor Brinton Laing</h3>
             <p style={{ color: '#00c8ff', fontSize: 14, fontWeight: 600, marginBottom: 28 }}>Event Director</p>
@@ -431,7 +431,7 @@ function Index() {
         <div className="reveal"><SectionTitle>Event Leadership</SectionTitle></div>
         <div className="reveal-stagger leaders-grid">
           {[
-            { name: 'Pastor Brinton Laing', role: 'Event Director', img: brin },
+            { name: 'Pastor Brinton Laing', role: 'Event Director', img: psLaing },
             { name: 'Pastor Xanti Mabenge', role: 'Event Leadership', img: pastorXanti },
           ].map((d, i) => (
             <div key={i} className="glass" style={{ padding: 28, textAlign: 'center' }}>
