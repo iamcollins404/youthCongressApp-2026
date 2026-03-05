@@ -38,7 +38,7 @@ function Register() {
   const handleFileUpload = async (file, type) => {
     if (!file) return
     if (file.size > 5 * 1024 * 1024) { setError('File must be 5 MB or less.'); return }
-    if (type === 'passportPhoto' && !file.type.startsWith('image/')) { setError('Passport photo must be an image.'); return }
+    if (type === 'passportPhoto' && !file.type.startsWith('image/')) { setError('Profile picture must be an image.'); return }
     if (type === 'paymentProof') {
       const ok = ['image/', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
       if (!ok.some((t) => file.type.startsWith(t) || file.type.includes(t))) { setError('Payment proof must be image, PDF or Word.'); return }
@@ -65,7 +65,7 @@ function Register() {
     const packagesNeedingSize = ['basicPack', 'halfPack', 'fullPack', 'withPack']
     if (packagesNeedingSize.includes(form.package) && !form.hoodieSize) { setError('Please select a jacket size.'); return }
     if (uploading.passportPhoto || uploading.paymentProof) { setError('Please wait for uploads to complete.'); return }
-    if (!uploadedFiles.passportPhoto?.url) { setError('Please upload a passport photo.'); return }
+    if (!uploadedFiles.passportPhoto?.url) { setError('Please upload a profile picture for your conference ID.'); return }
     if (!uploadedFiles.paymentProof?.url) { setError('Please upload payment proof.'); return }
 
     setSubmitting(true)
@@ -160,8 +160,8 @@ function Register() {
 
           <div className="form-2col" style={{ marginBottom: 16 }}>
             <div>
-              <label style={labelStyle}>First name <span style={requiredStar}>*</span></label>
-              <input type="text" name="firstName" value={form.firstName} onChange={handleChange} required placeholder="First name" style={inputStyle}
+              <label style={labelStyle}>First Name <span style={requiredStar}>*</span></label>
+              <input type="text" name="firstName" value={form.firstName} onChange={handleChange} required placeholder="First Name" style={inputStyle}
                 onFocus={(e) => e.target.style.borderColor = 'rgba(0,200,255,0.4)'}
                 onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'} />
             </div>
@@ -181,7 +181,7 @@ function Register() {
           </div>
 
           <div style={{ marginBottom: 16 }}>
-            <label style={labelStyle}>Contact number <span style={requiredStar}>*</span></label>
+            <label style={labelStyle}>Contact Number <span style={requiredStar}>*</span></label>
             <input type="tel" name="contactNumber" value={form.contactNumber} onChange={handleChange} required placeholder="e.g. 082 123 4567" style={inputStyle}
               onFocus={(e) => e.target.style.borderColor = 'rgba(0,200,255,0.4)'}
               onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'} />
@@ -191,7 +191,7 @@ function Register() {
             <div>
               <label style={labelStyle}>Gender <span style={requiredStar}>*</span></label>
               <select name="gender" value={form.gender} onChange={handleChange} required style={{ ...inputStyle, cursor: 'pointer' }}>
-                <option value="">Select gender</option>
+                <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
@@ -214,7 +214,7 @@ function Register() {
           <div style={{ marginBottom: 24 }}>
             <label style={labelStyle}>Conference or Region <span style={requiredStar}>*</span></label>
             <select name="conference" value={form.conference} onChange={handleChange} required style={{ ...inputStyle, cursor: 'pointer' }}>
-              <option value="">Select conference / region</option>
+              <option value="">Select Conference / Region</option>
               <option value="cc-western">Cape Conference - Western Region</option>
               <option value="cc-northern">Cape Conference - Northern Region</option>
               <option value="cc-eastern">Cape Conference - Eastern Region</option>
@@ -232,13 +232,13 @@ function Register() {
 
           <div className="form-2col" style={{ marginBottom: 24 }}>
             <div>
-              <label style={labelStyle}>Emergency contact name</label>
-              <input type="text" name="emergencyContactName" value={form.emergencyContactName} onChange={handleChange} placeholder="Full name" style={inputStyle}
+              <label style={labelStyle}>Emergency Contact Name</label>
+              <input type="text" name="emergencyContactName" value={form.emergencyContactName} onChange={handleChange} placeholder="Full Name" style={inputStyle}
                 onFocus={(e) => e.target.style.borderColor = 'rgba(0,200,255,0.4)'}
                 onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'} />
             </div>
             <div>
-              <label style={labelStyle}>Emergency contact number</label>
+              <label style={labelStyle}>Emergency Contact Number</label>
               <input type="tel" name="emergencyContactNumber" value={form.emergencyContactNumber} onChange={handleChange} placeholder="e.g. 082 123 4567" style={inputStyle}
                 onFocus={(e) => e.target.style.borderColor = 'rgba(0,200,255,0.4)'}
                 onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'} />
@@ -252,9 +252,9 @@ function Register() {
           <SectionHeader icon={<Package size={16} color="#00c8ff" />} title="Package & Details" />
 
           <div style={{ marginBottom: 16 }}>
-            <label style={labelStyle}>Delegate type</label>
+            <label style={labelStyle}>Delegate Type</label>
             <select name="delegateType" value={form.delegateType} onChange={handleChange} style={{ ...inputStyle, cursor: 'pointer' }}>
-              <option value="">Select type</option>
+              <option value="">Select Type</option>
               <option value="ambassador">Ambassador</option>
               <option value="youthAdult">Youth Adult</option>
             </select>
@@ -272,16 +272,16 @@ function Register() {
 
           {['basicPack', 'halfPack', 'fullPack', 'withPack'].includes(form.package) && (
             <div style={{ marginBottom: 16 }}>
-              <label style={labelStyle}>Jacket size <span style={requiredStar}>*</span></label>
+              <label style={labelStyle}>Jacket Size <span style={requiredStar}>*</span></label>
               <select name="hoodieSize" value={form.hoodieSize} onChange={handleChange} required style={{ ...inputStyle, cursor: 'pointer' }}>
-                <option value="">Select size</option>
+                <option value="">Select Size</option>
                 {['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'].map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
           )}
 
           <div style={{ marginBottom: 24 }}>
-            <label style={labelStyle}>Is your church insured?</label>
+            <label style={labelStyle}>Is Your Church Insured?</label>
             <select name="churchInsured" value={form.churchInsured} onChange={handleChange} style={{ ...inputStyle, cursor: 'pointer' }}>
               <option value="true">Yes</option>
               <option value="false">No</option>
@@ -296,20 +296,20 @@ function Register() {
 
           <div className="form-2col" style={{ marginBottom: 32 }}>
             <FileUploadBox
-              label="Passport photo"
+              label="Profile Picture for Your Conference ID"
               accept="image/*"
               uploaded={uploadedFiles.passportPhoto}
               isUploading={uploading.passportPhoto}
               onChange={(file) => handleFileUpload(file, 'passportPhoto')}
-              hint="JPG, PNG up to 5 MB"
+              hint="JPG, PNG Up to 5 MB"
             />
             <FileUploadBox
-              label="Payment proof"
+              label="Payment Proof"
               accept="image/*,.pdf,.doc,.docx"
               uploaded={uploadedFiles.paymentProof}
               isUploading={uploading.paymentProof}
               onChange={(file) => handleFileUpload(file, 'paymentProof')}
-              hint="Image, PDF, Word up to 5 MB"
+              hint="Image, PDF, Word Up to 5 MB"
             />
           </div>
 
@@ -321,14 +321,14 @@ function Register() {
             const getButtonText = () => {
               if (submitting) return null
               if (uploadsInProgress) return 'Uploading…'
-              if (!uploadsComplete) return 'Upload both files above to continue'
-              return 'Submit registration'
+              if (!uploadsComplete) return 'Upload Both Files Above to Continue'
+              return 'Submit Registration'
             }
             return (
               <div style={{ marginTop: 8 }}>
                 {!uploadsComplete && !uploadsInProgress && (
                   <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, marginBottom: 12, textAlign: 'center', lineHeight: 1.4 }}>
-                    Passport photo and payment proof are required
+                    Profile Picture and Payment Proof Are Required
                   </p>
                 )}
                 <button
@@ -353,7 +353,7 @@ function Register() {
         </form>
 
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.35)', fontSize: 13, marginTop: 28, lineHeight: 1.5 }}>
-          By registering you agree to the event terms and conditions.
+          By Registering You Agree to the Event Terms and Conditions.
         </p>
       </div>
 
@@ -379,8 +379,8 @@ function Register() {
             <div style={{ width: 64, height: 64, margin: '0 auto 20px', borderRadius: '50%', background: 'rgba(0,200,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <CheckCircle size={36} color="#00c8ff" />
             </div>
-            <h2 style={{ color: 'white', fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Registration successful!</h2>
-            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, marginBottom: 28 }}>You&apos;re all set for Youth Congress 2026.</p>
+            <h2 style={{ color: 'white', fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Registration Successful!</h2>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, marginBottom: 28 }}>You&apos;re All Set for Youth Congress 2026.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <button
                 onClick={() => navigate(`/ticket/${successModal.ticketId}`)}
@@ -391,7 +391,7 @@ function Register() {
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                 }}
               >
-                <Ticket size={20} /> View my ticket
+                <Ticket size={20} /> View My Ticket
               </button>
               <button
                 onClick={() => {
@@ -405,7 +405,7 @@ function Register() {
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                 }}
               >
-                <UserPlus size={20} /> Register again
+                <UserPlus size={20} /> Register Again
               </button>
               <button
                 onClick={() => {
@@ -419,7 +419,7 @@ function Register() {
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                 }}
               >
-                <Home size={20} /> Close and go to home
+                <Home size={20} /> Close and Go to Home
               </button>
             </div>
           </div>
@@ -469,21 +469,21 @@ function FileUploadBox({ label, accept, uploaded, isUploading, onChange, hint })
           <div style={{ textAlign: 'center' }}>
             <Loader size={26} style={{ display: 'block', margin: '0 auto 12px', animation: 'spin 1s linear infinite', color: '#fde047' }} />
             <span style={{ color: '#fde047', fontSize: 15, fontWeight: 600, display: 'block', letterSpacing: '0.02em' }}>Uploading…</span>
-            <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 4, display: 'block' }}>Almost there!</span>
+            <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 4, display: 'block' }}>Almost There!</span>
           </div>
         ) : uploaded ? (
           <div style={{ textAlign: 'center' }}>
             <CheckCircle size={26} color="#4ade80" style={{ display: 'block', margin: '0 auto 10px' }} />
-            <span style={{ color: '#4ade80', fontSize: 15, fontWeight: 600, display: 'block', letterSpacing: '0.02em' }}>All set!</span>
+            <span style={{ color: '#4ade80', fontSize: 15, fontWeight: 600, display: 'block', letterSpacing: '0.02em' }}>All Set!</span>
             <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 13, marginTop: 6, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {uploaded.name}
             </p>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 4 }}>Tap to replace</p>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 4 }}>Tap to Replace</p>
           </div>
         ) : (
           <div style={{ textAlign: 'center' }}>
             <span style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}><Upload size={26} color="rgba(255,255,255,0.25)" /></span>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 15, fontWeight: 500 }}>Tap to upload</p>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 15, fontWeight: 500 }}>Tap to Upload</p>
             <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 6 }}>{hint}</p>
           </div>
         )}
