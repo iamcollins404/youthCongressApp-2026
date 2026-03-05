@@ -432,7 +432,7 @@ function Index() {
         <div className="reveal-stagger leaders-grid">
           {[
             { name: 'Pastor Brinton Laing', role: 'Event Director', img: brin },
-            { name: 'Pastor Xanti Mabenge', role: 'Event Leadership' },
+            { name: 'Pastor Xanti Mabenge', role: 'Event Leadership', img: pastorXanti },
           ].map((d, i) => (
             <div key={i} className="glass" style={{ padding: 28, textAlign: 'center' }}>
               <div style={{
