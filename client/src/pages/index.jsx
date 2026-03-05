@@ -466,7 +466,7 @@ function Index() {
             { name: 'Chosen SG', img: chosen },
             { name: 'Heavenly Strings', img: heavenlyStrings },
             { name: 'Five Stones', img: fiveStones, imgFit: 'contain' },
-            { name: 'One Music', img: asOne },
+            { name: 'As one Music Ministry', img: asOne },
             { name: 'Celestial Chord', img: celestialChord },
           ].map((g, i) => (
             <div key={i} className="glass singing-card">
