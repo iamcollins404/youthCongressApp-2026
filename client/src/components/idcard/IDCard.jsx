@@ -530,7 +530,7 @@ const IDCard = ({
       ctx.shadowOffsetY = 0;
     };
 
-    // Load images and draw — only show card when BOTH photo AND logos are loaded; otherwise keep loading
+    // Load images and draw — show card as soon as both have resolved (success or fail)
     const finishAndSetReady = async () => {
       drawBadge();
       await drawEnhancedQRCode();
@@ -539,14 +539,10 @@ const IDCard = ({
 
     const loadImagesAndDraw = async () => {
       let logoLoaded = false;
-      let logoLoadSuccess = false;
       let photoResolved = false;
-      let photoLoadSuccess = false;
 
       const tryFinish = async () => {
         if (!logoLoaded || !photoResolved) return;
-        // Only show card when we have both photo and logos — otherwise keep loading
-        if (!logoLoadSuccess || !photoLoadSuccess) return;
         await finishAndSetReady();
       };
 
@@ -567,18 +563,15 @@ const IDCard = ({
         logoImg.onload = () => {
           logoImageRef.current = logoImg;
           logoLoaded = true;
-          logoLoadSuccess = true;
           tryDraw();
         };
         logoImg.onerror = () => {
           logoLoaded = true;
-          logoLoadSuccess = false;
           tryDraw();
         };
         logoImg.src = logosImg;
       } else {
         logoLoaded = true;
-        logoLoadSuccess = false;
         tryDraw();
       }
 
@@ -589,18 +582,15 @@ const IDCard = ({
         photoImg.onload = () => {
           photoImageRef.current = photoImg;
           photoResolved = true;
-          photoLoadSuccess = true;
           tryFinish();
         };
         photoImg.onerror = () => {
           photoResolved = true;
-          photoLoadSuccess = false;
           tryFinish();
         };
         photoImg.src = photoUrl;
       } else {
         photoResolved = true;
-        photoLoadSuccess = false;
         tryDraw();
       }
     };

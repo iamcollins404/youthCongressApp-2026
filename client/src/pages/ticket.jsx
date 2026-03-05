@@ -174,10 +174,10 @@ function Ticket() {
         {/* Top bar */}
         <div className="animate-fade-in-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, animationDelay: '0.1s', flexWrap: 'wrap', gap: 12 }}>
           <h1 style={{ color: 'white', fontSize: 'clamp(22px, 5vw, 28px)', fontWeight: 700 }}>Your Ticket</h1>
-          {!loading && !error && ticketData.status === 'Approved' && (
-            <button onClick={handleDownload} disabled={downloadingPdf || (!photoLoadComplete && !!ticketData.passportPhoto)}
+          {!loading && !error && ticketData.status === 'Approved' && photoLoadComplete && idCardPhotoDataUrl && (
+            <button onClick={handleDownload} disabled={downloadingPdf}
               className="btn-primary" style={{ padding: 'clamp(8px, 1.5vw, 10px) clamp(16px, 3vw, 24px)', fontSize: 'clamp(13px, 2vw, 14px)', opacity: downloadingPdf ? 0.5 : 1, cursor: downloadingPdf ? 'not-allowed' : 'pointer' }}>
-              {downloadingPdf ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Downloading…</> : !photoLoadComplete && ticketData.passportPhoto ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Loading photo…</> : <><Download size={14} style={{ display: 'inline', marginRight: 6 }} /> Download ID Card</>}
+              {downloadingPdf ? <><Loader size={14} style={{ display: 'inline', marginRight: 6, animation: 'spin 1s linear infinite' }} /> Downloading…</> : <><Download size={14} style={{ display: 'inline', marginRight: 6 }} /> Download ID Card</>}
             </button>
           )}
         </div>
