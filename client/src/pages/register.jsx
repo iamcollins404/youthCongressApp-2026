@@ -64,6 +64,7 @@ function Register() {
     if (missing.length) { setError(`Please fill in: ${missing.join(', ')}`); return }
     const packagesNeedingSize = ['basicPack', 'halfPack', 'fullPack', 'withPack']
     if (packagesNeedingSize.includes(form.package) && !form.hoodieSize) { setError('Please select a jacket size.'); return }
+    if (uploading.passportPhoto || uploading.paymentProof) { setError('Please wait for uploads to complete.'); return }
     if (!uploadedFiles.passportPhoto?.url) { setError('Please upload a passport photo.'); return }
     if (!uploadedFiles.paymentProof?.url) { setError('Please upload payment proof.'); return }
 
@@ -313,20 +314,33 @@ function Register() {
           </div>
 
           {/* Submit */}
-          <button
-            type="submit"
-            disabled={submitting}
-            style={{
-              width: '100%',
-              background: submitting ? 'rgba(0,200,255,0.3)' : 'linear-gradient(135deg, #00c8ff, #0066ee)',
-              color: 'white', fontWeight: 700, fontSize: 17,
-              padding: '16px 24px', borderRadius: 50, border: 'none', cursor: submitting ? 'not-allowed' : 'pointer',
-              boxShadow: submitting ? 'none' : '0 8px 24px rgba(0,200,255,0.2)',
-              transition: 'all 0.2s', opacity: submitting ? 0.7 : 1,
-            }}
-          >
-            {submitting ? <><Loader size={18} style={{ display: 'inline', marginRight: 8, animation: 'spin 1s linear infinite' }} /> Submitting...</> : 'Submit Registration'}
-          </button>
+          {(() => {
+            const uploadsComplete = uploadedFiles.passportPhoto?.url && uploadedFiles.paymentProof?.url
+            const uploadsInProgress = uploading.passportPhoto || uploading.paymentProof
+            const isDisabled = submitting || uploadsInProgress || !uploadsComplete
+            const getButtonText = () => {
+              if (submitting) return null
+              if (uploadsInProgress) return 'Uploading...'
+              if (!uploadsComplete) return 'Upload passport photo & payment proof to continue'
+              return 'Submit Registration'
+            }
+            return (
+              <button
+                type="submit"
+                disabled={isDisabled}
+                style={{
+                  width: '100%',
+                  background: isDisabled ? 'rgba(0,200,255,0.3)' : 'linear-gradient(135deg, #00c8ff, #0066ee)',
+                  color: 'white', fontWeight: 700, fontSize: 17,
+                  padding: '16px 24px', borderRadius: 50, border: 'none', cursor: isDisabled ? 'not-allowed' : 'pointer',
+                  boxShadow: isDisabled ? 'none' : '0 8px 24px rgba(0,200,255,0.2)',
+                  transition: 'all 0.2s', opacity: isDisabled ? 0.7 : 1,
+                }}
+              >
+                {submitting ? <><Loader size={18} style={{ display: 'inline', marginRight: 8, animation: 'spin 1s linear infinite' }} /> Submitting...</> : uploadsInProgress ? 'Uploading...' : getButtonText()}
+              </button>
+            )
+          })()}
         </form>
 
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: 12, marginTop: 32 }}>
@@ -426,8 +440,8 @@ function SectionHeader({ icon, title }) {
 
 /* ─── File upload box ─── */
 function FileUploadBox({ label, accept, uploaded, isUploading, onChange, hint }) {
-  const borderColor = uploaded ? 'rgba(0,200,255,0.3)' : 'rgba(255,255,255,0.1)'
-  const bg = uploaded ? 'rgba(0,200,255,0.04)' : 'transparent'
+  const borderColor = uploaded ? 'rgba(34,197,94,0.5)' : isUploading ? 'rgba(251,191,36,0.5)' : 'rgba(255,255,255,0.1)'
+  const bg = uploaded ? 'rgba(34,197,94,0.08)' : isUploading ? 'rgba(251,191,36,0.06)' : 'transparent'
 
   return (
     <div>
@@ -443,20 +457,24 @@ function FileUploadBox({ label, accept, uploaded, isUploading, onChange, hint })
         <input type="file" accept={accept} style={{ display: 'none' }}
           onChange={(e) => onChange(e.target.files?.[0])} disabled={isUploading} />
         {isUploading ? (
-          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}><Loader size={16} style={{ animation: 'spin 1s linear infinite' }} /> Uploading...</span>
+          <div style={{ textAlign: 'center' }}>
+            <Loader size={28} style={{ display: 'block', margin: '0 auto 10px', animation: 'spin 1s linear infinite' }} />
+            <span style={{ color: '#fbbf24', fontSize: 16, fontWeight: 600, display: 'block' }}>Uploading!</span>
+          </div>
         ) : uploaded ? (
           <div style={{ textAlign: 'center' }}>
-            <span style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}><CheckCircle size={24} color="#00c8ff" /></span>
-            <p style={{ color: '#00c8ff', fontSize: 13, fontWeight: 500, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <CheckCircle size={28} color="#22c55e" style={{ display: 'block', margin: '0 auto 8px' }} />
+            <span style={{ color: '#22c55e', fontSize: 16, fontWeight: 600, display: 'block' }}>Uploaded</span>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, marginTop: 6, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {uploaded.name}
             </p>
-            <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: 11, marginTop: 4 }}>Click to replace</p>
+            <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 4 }}>Click to replace</p>
           </div>
         ) : (
           <div style={{ textAlign: 'center' }}>
             <span style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}><Upload size={28} color="rgba(255,255,255,0.2)" /></span>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>Upload file</p>
-            <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: 11, marginTop: 4 }}>{hint}</p>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>Upload file</p>
+            <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12, marginTop: 4 }}>{hint}</p>
           </div>
         )}
       </label>
