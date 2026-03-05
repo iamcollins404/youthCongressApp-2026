@@ -467,32 +467,25 @@ function AdminTickets() {
     }
 
     try {
-      // Upload file to external service
+      // Upload file via our API (ForUploads)
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await axios.post(
-        "https://forfilesapp-gshyh0dxbcabhtgg.canadacentral-01.azurewebsites.net/upload?file",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const uploadUrl = `${API_URL.replace(/\/api\/?$/, "")}/api/uploads/file`;
+      const response = await axios.post(uploadUrl, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      if (response.data && response.data.fileUrl) {
-        // Store file URL instead of file object
+      if (response.data?.success && response.data?.file?.url) {
         setUploadedFiles((prev) => ({
           ...prev,
           [fileType]: {
-            url: response.data.fileUrl,
-            fileName: response.data.fileName,
+            url: response.data.file.url,
+            fileName: response.data.file.name,
             originalName: file.name,
           },
         }));
 
-        // Clear any previous errors
         setCreateTicketError(null);
       } else {
         setCreateTicketError(
@@ -728,27 +721,20 @@ function AdminTickets() {
     setIsUploadingEditPassportPhoto(true);
 
     try {
-      // Upload file to external service
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await axios.post(
-        "https://forfilesapp-gshyh0dxbcabhtgg.canadacentral-01.azurewebsites.net/upload?file",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const uploadUrl = `${API_URL.replace(/\/api\/?$/, "")}/api/uploads/file`;
+      const response = await axios.post(uploadUrl, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      if (response.data && response.data.fileUrl) {
-        // Store file URL instead of file object
+      if (response.data?.success && response.data?.file?.url) {
         setEditUploadedFiles((prev) => ({
           ...prev,
           passportPhoto: {
-            url: response.data.fileUrl,
-            fileName: response.data.fileName,
+            url: response.data.file.url,
+            fileName: response.data.file.name,
             originalName: file.name,
           },
         }));

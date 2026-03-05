@@ -9,7 +9,7 @@ const connectDB = require('./src/config/db');
 const ticketRoutes = require('./src/routes/tickets.route');
 const uploadRoutes = require('./src/routes/uploads.route');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 connectDB();
 
 const app = express();
