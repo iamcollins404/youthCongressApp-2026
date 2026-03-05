@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { API_URL } from '../utils/api'
 import Footer from '../components/landing/footer'
+import LogoWatermarks from '../components/landing/LogoWatermarks'
 import ylogo from '../assets/images/ylogo.png'
 
 const CAPE_TOWN_BG = 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1920&q=80'
@@ -95,8 +96,10 @@ function Register() {
       {/* BG */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
         <img src={CAPE_TOWN_BG} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.12 }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(12,15,46,0.85), rgba(12,15,46,0.95))' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(12,15,46,0.82), rgba(12,15,46,0.92))' }} />
       </div>
+
+      <LogoWatermarks src={ylogo} />
 
       {/* Orbs */}
       <div className="glow-orb glow-orb-purple" style={{ position: 'fixed', width: 300, height: 300, top: '-5%', left: '-8%' }} />

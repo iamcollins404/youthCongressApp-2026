@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import useReveal from '../utils/useReveal'
 import Footer from '../components/landing/footer'
+import LogoWatermarks from '../components/landing/LogoWatermarks'
 import ylogo from '../assets/images/ylogo.png'
 
 import brin from '../assets/images/brin.jpg'
@@ -13,13 +14,12 @@ import heavenlyStrings from '../assets/newImages/heavenlystrings.jpeg'
 import chosen from '../assets/newImages/choosen.jpeg'
 import asOne from '../assets/newImages/oneMusic.jpeg'
 import celestialChord from '../assets/newImages/celestialChord.jpeg'
+import fiveStones from '../assets/newImages/fiveStones.jpeg'
 import pastorSeb from '../assets/newImages/pastorSeb.jpeg'
 import pastorNhlanhla from '../assets/newImages/pastorNhlanhla.jpeg'
 import pastorReece from '../assets/newImages/pastorReece.jpeg'
-// Pastor Xanti Mabenge photo: save image as client/src/assets/images/xanti-mabenge.png then uncomment:
-// import xantiMabenge from '../assets/images/xanti-mabenge.png'
-// Add photo: save as client/src/assets/images/xanti-mabenge.png then uncomment:
-// import xantiMabenge from '../assets/images/xanti-mabenge.png'
+import pastorEugene from '../assets/newImages/pastoreugiene.jpeg'
+import pastorXanti from '../assets/newImages/pastorXanti.jpeg'
 
 const CAPE_TOWN_BG = 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1920&q=80'
 
@@ -71,10 +71,12 @@ function Index() {
 
   return (
     <div style={{ background: '#0c0f2e', minHeight: '100vh', overflowX: 'hidden' }}>
+      <LogoWatermarks src={ylogo} />
 
       {/* ─── NAVBAR ─── */}
       <nav
         ref={navRef}
+        className={navSolid ? 'nav-scrolled' : ''}
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
           transition: 'all 0.4s',
@@ -84,6 +86,27 @@ function Index() {
         }}
       >
         <div className="nav-inner">
+          {/* Mobile: Menu button on top of logo */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="nav-mobile-menu-btn"
+            style={{
+              alignItems: 'center', justifyContent: 'center', gap: 8,
+              padding: '10px 24px', borderRadius: 50,
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              color: '#00c8ff', fontSize: 15, fontWeight: 600,
+              cursor: 'pointer', letterSpacing: '0.02em',
+              backdropFilter: 'blur(10px)',
+              transition: 'background 0.2s, border-color 0.2s, color 0.2s',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(0,200,255,0.12)'; e.currentTarget.style.borderColor = 'rgba(0,200,255,0.35)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)' }}
+          >
+            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            <span className="nav-menu-text">Menu</span>
+          </button>
           <Link to="/" className="max-sm:flex max-sm:justify-center max-sm:w-full" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <img src={ylogo} alt="Logo" className="logo-mobile-big max-sm:block max-sm:mx-auto max-sm:mt-3" style={{ height: 48, objectFit: 'contain' }} />
           </Link>
@@ -291,7 +314,7 @@ function Index() {
           <SectionTitle>Welcome from the Event Director</SectionTitle>
           <div className="glass" style={{ padding: 'clamp(24px, 4vw, 40px)', textAlign: 'center', overflow: 'hidden' }}>
             <div style={{ width: 100, height: 100, margin: '0 auto 20px', borderRadius: '50%', overflow: 'hidden', border: '3px solid rgba(0,200,255,0.2)' }}>
-              <img src={brin} alt="Pastor Brinton Laing" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={brin} alt="Pastor Brinton Laing" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
             </div>
             <h3 style={{ color: 'white', fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Pastor Brinton Laing</h3>
             <p style={{ color: '#00c8ff', fontSize: 14, fontWeight: 600, marginBottom: 28 }}>Event Director</p>
@@ -304,6 +327,37 @@ function Index() {
               </p>
               <p style={{ marginBottom: 0 }}>
                 May this weekend deepen your connection with God, build meaningful friendships, and remind you that you are part of something bigger than yourself. You belong. You matter. And together, as we stay connected to the True Vine, we will grow, thrive, and shine for His glory. Welcome — this weekend is for you!
+              </p>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* ═══════════════ WELCOME FROM PASTOR MABENGE ═══════════════ */}
+      <Section>
+        <div className="reveal" style={{ maxWidth: 800, margin: '0 auto' }}>
+          <SectionTitle>Welcome from Pastor Mabenge</SectionTitle>
+          <div className="glass" style={{ padding: 'clamp(24px, 4vw, 40px)', textAlign: 'center', overflow: 'hidden' }}>
+            <div style={{ width: 100, height: 100, margin: '0 auto 20px', borderRadius: '50%', overflow: 'hidden', border: '3px solid rgba(0,200,255,0.2)' }}>
+              <img src={pastorXanti} alt="Pastor Xanti Mabenge" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+            </div>
+            <h3 style={{ color: 'white', fontSize: 22, fontWeight: 700, marginBottom: 4 }}>Pastor Xanti Mabenge</h3>
+            <p style={{ color: '#00c8ff', fontSize: 14, fontWeight: 600, marginBottom: 28 }}>Event Leadership</p>
+            <div style={{ textAlign: 'left', color: 'rgba(255,255,255,0.85)', fontSize: 'clamp(15px, 2.2vw, 17px)', lineHeight: 1.85 }}>
+              <p style={{ marginBottom: 20 }}>
+                Charles Dickens: &ldquo;It was the best of times, it was the worst of times.&rdquo; What a time to be alive! For a time such as this you are a young person of purpose, you stand enabled by grace!
+              </p>
+              <p style={{ marginBottom: 20 }}>
+                &ldquo;Greater is He that&rsquo;s in you than he who is in the world.&rdquo; &ldquo;For God has not given you a spirit of fear but of power.&rdquo;
+              </p>
+              <p style={{ marginBottom: 20 }}>
+                Remember, the longer you stay on the wrong train, the more expensive the cost to return…. Could this be the time to get off the wrong train young person? Welcome to the youth congress 2026 🥳
+              </p>
+              <p style={{ marginBottom: 20 }}>
+                Join us in an atmosphere that is intentionally curated for your spiritual needs, seamlessly coordinated and impactful through worship and prayer. Our end game is to leave you connected to the source, Jesus!
+              </p>
+              <p style={{ marginBottom: 0 }}>
+                No matter the terrain that you may have traversed to get into 2026 oksalayo you are here and you are within, alive and able to still choose your first love! May grace locate you and enable you to stay connected!
               </p>
             </div>
           </div>
@@ -355,10 +409,10 @@ function Index() {
         <div className="reveal"><SectionTitle>Featured Speakers</SectionTitle></div>
         <div className="reveal-stagger speakers-grid">
           {[
-            { name: 'Pastor Sebastian Braxston', role: 'Main Speaker', highlight: true, img: pastorSeb },
-            { name: 'Pastor Nhlanhla Buthelezi', role: 'Speaker', img: pastorNhlanhla },
-            { name: 'Pastor Reece Anderson', role: 'Speaker', img: pastorReece },
-            { name: 'Pastor Eugene Carolus', role: 'Speaker' },
+            { name: 'Pastor Sebastian Braxston', role: 'Main Speaker', highlight: true, img: pastorSeb, imgPosition: 'center 20%' },
+            { name: 'Pastor Nhlanhla Buthelezi', role: 'Speaker', img: pastorNhlanhla, imgPosition: '35% 25%' },
+            { name: 'Pastor Reece Anderson', role: 'Speaker', img: pastorReece, imgPosition: 'center' },
+            { name: 'Pastor Eugene Carolus', role: 'Speaker', img: pastorEugene, imgPosition: '65% 25%' },
             { name: 'Elder Obey Chimuka', role: 'Speaker' },
           ].map((s, i) => (
             <div key={i} className="glass" style={{ padding: 28, textAlign: 'center', border: s.highlight ? '1px solid rgba(0,200,255,0.3)' : undefined }}>
@@ -368,7 +422,7 @@ function Index() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 border: '2px solid rgba(0,200,255,0.15)',
               }}>
-                {s.img ? <img src={s.img} alt={s.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontSize: 28, color: 'rgba(255,255,255,0.4)' }}>{s.name.split(' ').map(w => w[0]).join('')}</span>}
+                {s.img ? <img src={s.img} alt={s.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: s.imgPosition || 'center' }} /> : <span style={{ fontSize: 28, color: 'rgba(255,255,255,0.4)' }}>{s.name.split(' ').map(w => w[0]).join('')}</span>}
               </div>
               <h3 style={{ color: 'white', fontSize: 16, fontWeight: 700, marginBottom: 4 }}>{s.name}</h3>
               <p style={{ color: s.highlight ? '#00c8ff' : 'rgba(255,255,255,0.4)', fontWeight: 500, fontSize: 13 }}>{s.role}</p>
@@ -384,7 +438,6 @@ function Index() {
           {[
             { name: 'Pastor Brinton Laing', role: 'Event Director', img: brin },
             { name: 'Pastor Xanti Mabenge', role: 'Event Leadership' },
-            { name: 'Bro Prince Mabenge', role: 'Youth Congress Coordinator' },
           ].map((d, i) => (
             <div key={i} className="glass" style={{ padding: 28, textAlign: 'center' }}>
               <div style={{
@@ -394,7 +447,7 @@ function Index() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {d.img
-                  ? <img src={d.img} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ? <img src={d.img} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
                   : <span style={{ fontSize: 28, color: 'rgba(255,255,255,0.35)' }}>{d.name.split(' ').map(w => w[0]).join('')}</span>
                 }
               </div>
@@ -412,14 +465,14 @@ function Index() {
           {[
             { name: 'Chosen SG', img: chosen },
             { name: 'Heavenly Strings', img: heavenlyStrings },
-            { name: 'Five Stones' },
+            { name: 'Five Stones', img: fiveStones, imgFit: 'contain' },
             { name: 'One Music', img: asOne },
             { name: 'Celestial Chord', img: celestialChord },
           ].map((g, i) => (
             <div key={i} className="glass singing-card">
               <div className="singing-card-image-wrap">
                 {g.img ? (
-                  <img src={g.img} alt={g.name} className="singing-card-img" />
+                  <img src={g.img} alt={g.name} className="singing-card-img" style={g.imgFit ? { objectFit: g.imgFit } : undefined} />
                 ) : (
                   <span className="singing-card-placeholder">
                     <Music size={48} color="#00c8ff" />
