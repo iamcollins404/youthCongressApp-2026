@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import logosImg from '../../assets/logos.png';
 import QRCode from 'qrcode';
@@ -14,8 +14,10 @@ const IDCard = ({
   const canvasRef = useRef(null);
   const logoImageRef = useRef(null);
   const photoImageRef = useRef(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
+    setIsReady(false);
     const canvas = canvasRef.current;
     if (!canvas) return;
     
@@ -518,6 +520,7 @@ const IDCard = ({
           drawBadge();
           // Then draw QR code asynchronously
           await drawEnhancedQRCode();
+          setIsReady(true);
         }
       };
       
@@ -558,24 +561,76 @@ const IDCard = ({
     
   }, [name, id, conference, photoUrl]);
 
+  const canvasStyle = {
+    borderRadius: '12px',
+    boxShadow: '0 20px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1)',
+    transition: 'opacity 0.4s ease, transform 0.3s ease',
+    cursor: 'pointer',
+    opacity: isReady ? 1 : 0,
+  };
+
   return (
     <div style={{
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       padding: '20px',
-      fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
+      fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+      position: 'relative',
+      width: 738,
+      height: 559,
     }}>
+      {/* Skeleton loader */}
+      {!isReady && (
+        <div
+          style={{
+            width: 738,
+            height: 559,
+            borderRadius: 12,
+            background: 'linear-gradient(110deg, #111540 0%, #111540 40%, rgba(0,200,255,0.08) 50%, #111540 60%, #111540 100%)',
+            backgroundSize: '300% 100%',
+            animation: 'idcard-skeleton-shimmer 1.8s ease-in-out infinite',
+            position: 'absolute',
+            border: '1px solid rgba(0,200,255,0.1)',
+          }}
+        >
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 120,
+            height: 120,
+            borderRadius: '50%',
+            background: 'rgba(0,200,255,0.1)',
+          }} />
+          <div style={{
+            position: 'absolute',
+            bottom: 80,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 200,
+            height: 16,
+            borderRadius: 8,
+            background: 'rgba(255,255,255,0.08)',
+          }} />
+          <div style={{
+            position: 'absolute',
+            bottom: 50,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 120,
+            height: 12,
+            borderRadius: 6,
+            background: 'rgba(255,255,255,0.06)',
+          }} />
+        </div>
+      )}
       <canvas
         ref={canvasRef}
         width={738}
         height={559}
-        style={{
-          borderRadius: '12px',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1)',
-          transition: 'transform 0.3s ease',
-          cursor: 'pointer'
-        }}
+        style={canvasStyle}
         onMouseEnter={(e) => {
           e.target.style.transform = 'translateY(-5px)';
         }}

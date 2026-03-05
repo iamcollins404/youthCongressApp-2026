@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { ArrowUp } from 'lucide-react'
 import Index from './pages/index'
@@ -11,8 +11,10 @@ import AdminDuplicates from './pages/admin/duplicates'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
   }, [pathname])
   return null
 }
@@ -76,6 +78,12 @@ function BackToTopButton() {
 }
 
 function App() {
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+  }, [])
+
   return (
     <BrowserRouter>
       <div className="min-h-screen" style={{ background: '#0c0f2e' }}>
