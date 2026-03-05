@@ -4,7 +4,7 @@ import axios from 'axios'
 import confetti from 'canvas-confetti'
 import {
   ArrowLeft, AlertTriangle, User, ShieldAlert, Package,
-  FileText, Upload, CheckCircle, Loader, Ticket, UserPlus
+  FileText, Upload, CheckCircle, Loader, Ticket, UserPlus, Home
 } from 'lucide-react'
 import { API_URL } from '../utils/api'
 import Footer from '../components/landing/footer'
@@ -343,7 +343,6 @@ function Register() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: 20,
           }}
-          onClick={(e) => e.target === e.currentTarget && setSuccessModal({ show: false, ticketId: null })}
         >
           <div
             className="glass"
@@ -374,9 +373,7 @@ function Register() {
               <button
                 onClick={() => {
                   setSuccessModal({ show: false, ticketId: null })
-                  setForm({ firstName: '', surname: '', email: '', contactNumber: '', conference: '', churchOrOrganization: '', gender: '', age: '', delegateType: '', emergencyContactName: '', emergencyContactNumber: '', package: 'basicPack', hoodieSize: '', churchInsured: 'true' })
-                  setUploadedFiles({ passportPhoto: null, paymentProof: null })
-                  setError(null)
+                  window.location.reload()
                 }}
                 style={{
                   width: '100%', padding: '14px 24px', borderRadius: 50,
@@ -386,6 +383,20 @@ function Register() {
                 }}
               >
                 <UserPlus size={20} /> Register again
+              </button>
+              <button
+                onClick={() => {
+                  setSuccessModal({ show: false, ticketId: null })
+                  navigate('/')
+                }}
+                style={{
+                  width: '100%', padding: '14px 24px', borderRadius: 50,
+                  background: 'rgba(239,68,68,0.9)', color: 'white',
+                  fontWeight: 600, fontSize: 16, border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                }}
+              >
+                <Home size={20} /> Close and go to home
               </button>
             </div>
           </div>
