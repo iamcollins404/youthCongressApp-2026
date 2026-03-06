@@ -281,7 +281,7 @@ const IDCard = ({
       const textX = canvas.width - 28;
       const lineSpacing = 34;
       const blockTop = 52;
-      ctx.fillText('CC-NCSA', textX, blockTop);
+      ctx.fillText('WR-NR', textX, blockTop);
       ctx.font = 'bold 26px "Segoe UI"';
       ctx.fillText('SENIOR YOUTH', textX, blockTop + lineSpacing);
       ctx.fillText('CONGRESS', textX, blockTop + lineSpacing * 2);
