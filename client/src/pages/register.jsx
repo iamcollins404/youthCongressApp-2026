@@ -265,7 +265,7 @@ function Register() {
             <select name="package" value={form.package} onChange={handleChange} required style={{ ...inputStyle, cursor: 'pointer' }}>
               <option value="basic">Basic — No pack (R450)</option>
               <option value="basicPack">Basic Pack — Jacket (R750)</option>
-              <option value="halfPack">Half Pack — Jacket & Bag (R900)</option>
+              <option value="halfPack">Half Pack — Jacket & Bag (R950)</option>
               <option value="fullPack">Full Pack — Jacket, Bag, Cup & Socks (R1 200)</option>
             </select>
           </div>

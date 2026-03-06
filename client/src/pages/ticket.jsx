@@ -53,7 +53,7 @@ function Ticket() {
         const pkgMap = {
           'basic': 'Basic — No Pack (R450)',
           'basicPack': 'Basic Pack — Jacket (R750)',
-          'halfPack': 'Half Pack — Jacket & Bag (R900)',
+          'halfPack': 'Half Pack — Jacket & Bag (R950)',
           'fullPack': 'Full Pack — Jacket, Bag, Cup & Socks (R1 200)',
           'withPack': 'Including Congress Pack (R750)',
           'withoutPack': 'Without Congress Pack (R450)',

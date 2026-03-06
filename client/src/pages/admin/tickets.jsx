@@ -11,7 +11,7 @@ import { safeParseDate, formatDate, formatDateTime } from "../../utils/date";
 const PKG_LABELS = {
   basic: 'Basic — No Pack (R450)',
   basicPack: 'Basic Pack — Jacket (R750)',
-  halfPack: 'Half Pack — Jacket & Bag (R900)',
+  halfPack: 'Half Pack — Jacket & Bag (R950)',
   fullPack: 'Full Pack — Jacket, Bag, Cup & Socks (R1 200)',
   withPack: 'Including Congress Pack (R750)',
   withoutPack: 'Without Congress Pack (R450)',
@@ -1971,7 +1971,7 @@ function AdminTickets() {
                                   <option value="">Select package</option>
                                   <option value="basic">Basic — No Pack (R450)</option>
                                   <option value="basicPack">Basic Pack — Jacket (R750)</option>
-                                  <option value="halfPack">Half Pack — Jacket & Bag (R900)</option>
+                                  <option value="halfPack">Half Pack — Jacket & Bag (R950)</option>
                                   <option value="fullPack">Full Pack — Jacket, Bag, Cup & Socks (R1 200)</option>
                                 </select>
                               ) : (
@@ -3060,7 +3060,7 @@ function AdminTickets() {
                             <option value="">Select package</option>
                             <option value="basic">Basic — No Pack (R450)</option>
                             <option value="basicPack">Basic Pack — Jacket (R750)</option>
-                            <option value="halfPack">Half Pack — Jacket & Bag (R900)</option>
+                            <option value="halfPack">Half Pack — Jacket & Bag (R950)</option>
                             <option value="fullPack">Full Pack — Jacket, Bag, Cup & Socks (R1 200)</option>
                           </select>
                         </div>
