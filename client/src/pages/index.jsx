@@ -494,7 +494,7 @@ function Index() {
             { name: 'Basic', price: 'R450', desc: 'Registration without a pack', items: ['Congress access', 'All sessions', 'Meals on premises'] },
             { name: 'Basic Pack', price: 'R750', desc: 'Registration with Jacket', items: ['Everything in Basic', 'Congress Jacket'], highlight: false },
             { name: 'Half Pack', price: 'R950', desc: 'Jacket & Bag', items: ['Everything in Basic', 'Congress Jacket', 'Congress Bag'], highlight: false },
-            { name: 'Full Pack', price: 'R1200', desc: 'Jacket, Bag, Cup & Socks', items: ['Everything in Basic', 'Congress Jacket', 'Congress Bag', 'Stately Cup', 'Congress Socks'], highlight: true },
+            { name: 'Full Pack', price: 'R1200', desc: 'Jacket, Bag, Cup & Socks', items: ['Everything in Basic', 'Congress Jacket', 'Congress Bag', 'Cup', 'Congress Socks'], highlight: true },
           ].map((pkg, i) => (
             <div
               key={i}
