@@ -79,7 +79,7 @@ const sendApprovalEmail = async (registration) => {
   <div class="container">
     <div class="header">
       <h1>Senior Youth Congress 2026</h1>
-      <p class="tagline">EAST LONDON INTERNATIONAL CONVENTION CENTRE</p>
+      <p class="tagline">White City Multi Purpose Center — Saldanha Bay</p>
     </div>
     <div class="content">
       <div class="congrats">
